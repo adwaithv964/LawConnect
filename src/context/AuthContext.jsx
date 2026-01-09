@@ -36,9 +36,32 @@ export function AuthProvider({ children }) {
         return signInWithPopup(auth, provider);
     }
 
+    async function syncUserWithBackend(user) {
+        if (!user) return;
+        try {
+            const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
+            await fetch(`${apiBaseUrl}/users`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    firebaseUid: user.uid,
+                    email: user.email,
+                    displayName: user.displayName || 'User'
+                }),
+            });
+        } catch (error) {
+            console.error('Failed to sync user with backend:', error);
+        }
+    }
+
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
+        const unsubscribe = onAuthStateChanged(auth, async (user) => {
             setCurrentUser(user);
+            if (user) {
+                await syncUserWithBackend(user);
+            }
             setLoading(false);
         });
 

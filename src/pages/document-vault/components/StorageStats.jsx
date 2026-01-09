@@ -1,15 +1,24 @@
 import React from 'react';
 
 const StorageStats = ({ documents }) => {
-  const totalSize = documents?.reduce((acc, doc) => {
+  const totalSizeBytes = documents?.reduce((acc, doc) => {
     const size = parseFloat(doc?.size);
     return acc + (isNaN(size) ? 0 : size);
   }, 0);
 
-  const storageLimit = 100;
-  const usedPercentage = (totalSize / storageLimit) * 100;
+  const totalSizeMB = totalSizeBytes / (1024 * 1024);
+  const storageLimit = 100; // MB
+  const usedPercentage = (totalSizeMB / storageLimit) * 100;
 
   const recentUploads = documents?.slice(0, 3);
+
+  const formatFileSize = (bytes) => {
+    if (!bytes) return '0 B';
+    const k = 1024;
+    const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  };
 
   return (
     <div className="bg-card rounded-lg shadow-elevation-1 p-4 space-y-6">
@@ -18,7 +27,7 @@ const StorageStats = ({ documents }) => {
         <div className="space-y-2">
           <div className="flex items-center justify-between text-sm">
             <span className="text-muted-foreground">Used</span>
-            <span className="font-semibold text-foreground">{totalSize?.toFixed(1)} MB / {storageLimit} MB</span>
+            <span className="font-semibold text-foreground">{totalSizeMB?.toFixed(2)} MB / {storageLimit} MB</span>
           </div>
           <div className="w-full bg-muted rounded-full h-2 overflow-hidden">
             <div
@@ -27,7 +36,7 @@ const StorageStats = ({ documents }) => {
             />
           </div>
           <p className="text-xs text-muted-foreground">
-            {(storageLimit - totalSize)?.toFixed(1)} MB remaining
+            {(Math.max(0, storageLimit - totalSizeMB))?.toFixed(2)} MB remaining
           </p>
         </div>
       </div>
@@ -36,7 +45,7 @@ const StorageStats = ({ documents }) => {
         <h3 className="text-sm font-semibold text-foreground mb-3">Recent Uploads</h3>
         <div className="space-y-3">
           {recentUploads?.map((doc) => (
-            <div key={doc?.id} className="flex items-center gap-3">
+            <div key={doc?._id || doc?.id} className="flex items-center gap-3">
               <div className="w-10 h-10 bg-muted rounded-lg flex items-center justify-center flex-shrink-0">
                 <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -44,7 +53,7 @@ const StorageStats = ({ documents }) => {
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-foreground truncate">{doc?.name}</p>
-                <p className="text-xs text-muted-foreground">{doc?.size}</p>
+                <p className="text-xs text-muted-foreground">{formatFileSize(doc?.size)}</p>
               </div>
             </div>
           ))}

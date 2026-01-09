@@ -1,7 +1,7 @@
 import React from 'react';
 import DocumentCard from './DocumentCard';
 
-const DocumentGrid = ({ documents, viewMode, onDocumentClick }) => {
+const DocumentGrid = ({ documents, viewMode, onDocumentClick, onDelete }) => {
   if (documents?.length === 0) {
     return (
       <div className="bg-card rounded-lg shadow-elevation-1 p-12 text-center">
@@ -30,6 +30,7 @@ const DocumentGrid = ({ documents, viewMode, onDocumentClick }) => {
               document={doc}
               viewMode="list"
               onClick={() => onDocumentClick(doc)}
+              onDelete={onDelete}
             />
           ))}
         </div>
@@ -45,6 +46,7 @@ const DocumentGrid = ({ documents, viewMode, onDocumentClick }) => {
           document={doc}
           viewMode="grid"
           onClick={() => onDocumentClick(doc)}
+          onDelete={onDelete}
         />
       ))}
     </div>

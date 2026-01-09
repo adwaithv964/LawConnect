@@ -12,6 +12,26 @@ export default function Signup() {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
+    async function syncUserWithBackend(user) {
+        try {
+            const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
+            await fetch(`${apiBaseUrl}/users`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    firebaseUid: user.uid,
+                    email: user.email,
+                    displayName: user.displayName || 'User'
+                }),
+            });
+        } catch (error) {
+            console.error('Failed to sync user with backend:', error);
+            // Don't block the UI flow for this background sync
+        }
+    }
+
     async function handleSubmit(e) {
         e.preventDefault();
 
@@ -22,10 +42,12 @@ export default function Signup() {
         try {
             setError('');
             setLoading(true);
-            await signup(emailRef.current.value, passwordRef.current.value);
+            const userCredential = await signup(emailRef.current.value, passwordRef.current.value);
+            await syncUserWithBackend(userCredential.user);
             navigate('/');
-        } catch {
+        } catch (error) {
             setError('Failed to create an account');
+            console.error(error);
         }
 
         setLoading(false);
@@ -35,7 +57,8 @@ export default function Signup() {
         try {
             setError('');
             setLoading(true);
-            await googleSignIn();
+            const userCredential = await googleSignIn();
+            await syncUserWithBackend(userCredential.user);
             navigate('/');
         } catch (err) {
             setError('Failed to sign in with Google');
