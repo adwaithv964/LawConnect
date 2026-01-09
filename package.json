@@ -58,7 +58,7 @@
   "scripts": {
     "start": "vite",
     "dev": "vite",
-    "build": "vite build --sourcemap",
+    "build": "vite build --outDir dist --sourcemap",
     "serve": "vite preview",
     "server": "cd server && npm run dev"
   },
