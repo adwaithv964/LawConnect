@@ -1,7 +1,7 @@
 import React from 'react';
 import Icon from '../../../components/AppIcon';
 
-const TimelineOverview = ({ totalSteps, estimatedDuration, complexity, consultationPoints }) => {
+const TimelineOverview = ({ totalSteps, estimatedDuration, complexity, consultationPoints, onExportPDF, onCreateCase, isExporting, isCreating }) => {
   const complexityConfig = {
     low: { color: 'text-success', bg: 'bg-success/10', label: 'Low Complexity' },
     medium: { color: 'text-warning', bg: 'bg-warning/10', label: 'Medium Complexity' },
@@ -67,13 +67,21 @@ const TimelineOverview = ({ totalSteps, estimatedDuration, complexity, consultat
         )}
 
         <div className="pt-4 border-t border-border space-y-3">
-          <button className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:opacity-90 transition-smooth">
+          <button
+            onClick={onExportPDF}
+            disabled={isExporting}
+            className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:opacity-90 transition-smooth disabled:opacity-50"
+          >
             <Icon name="Download" size={18} color="currentColor" />
-            <span>Export as PDF</span>
+            <span>{isExporting ? 'Exporting...' : 'Export as PDF'}</span>
           </button>
-          <button className="w-full flex items-center justify-center gap-2 px-4 py-3 border border-border text-foreground rounded-lg font-medium hover:bg-muted transition-smooth">
+          <button
+            onClick={onCreateCase}
+            disabled={isCreating}
+            className="w-full flex items-center justify-center gap-2 px-4 py-3 border border-border text-foreground rounded-lg font-medium hover:bg-muted transition-smooth disabled:opacity-50"
+          >
             <Icon name="Calendar" size={18} color="currentColor" />
-            <span>Create Timeline Case</span>
+            <span>{isCreating ? 'Creating...' : 'Create Timeline Case'}</span>
           </button>
         </div>
       </div>

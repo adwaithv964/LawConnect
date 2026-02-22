@@ -7,6 +7,8 @@ import LegalTimelineTracker from './pages/legal-timeline-tracker';
 import MainDashboard from './pages/main-dashboard';
 import VictimSupportFlow from './pages/victim-support-flow';
 import LegalLibrary from './pages/legal-library';
+import ArticleDetail from './pages/legal-library/ArticleDetail';
+import LegalNews from './pages/legal-news';
 import LegalStepsGenerator from './pages/legal-steps-generator';
 import DocumentTemplates from './pages/document-templates';
 import DocumentVault from './pages/document-vault';
@@ -32,6 +34,8 @@ const Routes = () => {
           <Route path="/legal-timeline-tracker" element={<PrivateRoute><LegalTimelineTracker /></PrivateRoute>} />
           <Route path="/victim-support-flow" element={<PrivateRoute><VictimSupportFlow /></PrivateRoute>} />
           <Route path="/legal-library" element={<PrivateRoute><LegalLibrary /></PrivateRoute>} />
+          <Route path="/legal-library/:id" element={<PrivateRoute><ArticleDetail /></PrivateRoute>} />
+          <Route path="/legal-news" element={<PrivateRoute><LegalNews /></PrivateRoute>} />
           <Route path="/legal-steps-generator" element={<PrivateRoute><LegalStepsGenerator /></PrivateRoute>} />
           <Route path="/document-templates" element={<PrivateRoute><DocumentTemplates /></PrivateRoute>} />
           <Route path="/document-vault" element={<PrivateRoute><DocumentVault /></PrivateRoute>} />

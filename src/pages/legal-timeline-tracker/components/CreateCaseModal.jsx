@@ -17,6 +17,7 @@ const CreateCaseModal = ({ isOpen, onClose, onCreateCase, caseToEdit, onUpdateCa
   });
 
   const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   React.useEffect(() => {
     if (caseToEdit) {
@@ -94,23 +95,30 @@ const CreateCaseModal = ({ isOpen, onClose, onCreateCase, caseToEdit, onUpdateCa
     return Object.keys(newErrors)?.length === 0;
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (validateForm()) {
-      if (caseToEdit) {
-        onUpdateCase({
-          ...caseToEdit,
-          title: formData.title,
-          category: formData.category,
-          priority: formData.priority,
-          startDate: new Date(formData.startDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
-          isManualProgress: formData.isManualProgress,
-          completionPercentage: formData.isManualProgress ? formData.completionPercentage : caseToEdit.completionPercentage // Only update percentage if manual, else keep existing (which should match calc) or we could recalc here but better let logic handle
-          // Description might need to be stored
-        });
-      } else {
-        onCreateCase(formData);
+      setIsSubmitting(true);
+      try {
+        if (caseToEdit) {
+          await onUpdateCase({
+            ...caseToEdit,
+            title: formData.title,
+            description: formData.description,
+            category: formData.category,
+            priority: formData.priority,
+            startDate: formData.startDate,
+            isManualProgress: formData.isManualProgress,
+            completionPercentage: formData.isManualProgress ? formData.completionPercentage : caseToEdit.completionPercentage
+          });
+        } else {
+          await onCreateCase(formData);
+        }
+        onClose();
+      } catch (err) {
+        console.error('Submit error:', err);
+      } finally {
+        setIsSubmitting(false);
       }
-      onClose();
     }
   };
 
@@ -242,11 +250,12 @@ const CreateCaseModal = ({ isOpen, onClose, onCreateCase, caseToEdit, onUpdateCa
           </Button>
           <Button
             variant="default"
-            iconName="Plus"
+            iconName={isSubmitting ? 'Loader' : 'Plus'}
             iconPosition="left"
             onClick={handleSubmit}
+            disabled={isSubmitting}
           >
-            {caseToEdit ? 'Save Changes' : 'Create Case'}
+            {isSubmitting ? 'Saving...' : caseToEdit ? 'Save Changes' : 'Create Case'}
           </Button>
         </div>
       </div>

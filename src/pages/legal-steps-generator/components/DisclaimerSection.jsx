@@ -1,9 +1,9 @@
 import React from 'react';
 import Icon from '../../../components/AppIcon';
 
-const DisclaimerSection = () => {
+const DisclaimerSection = ({ ...props }) => {
   return (
-    <div className="bg-warning/5 border border-warning/20 rounded-xl p-6 lg:p-8">
+    <div className="bg-warning/5 border border-warning/20 rounded-xl p-6 lg:p-8" {...props}>
       <div className="flex items-start gap-4">
         <div className="flex-shrink-0">
           <div className="flex items-center justify-center w-12 h-12 bg-warning/10 rounded-lg">

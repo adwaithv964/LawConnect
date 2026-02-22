@@ -1,28 +1,56 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../../../components/ui/Button';
+import { logActivity } from '../../../utils/api';
 
 const QuickActionButtons = () => {
   const navigate = useNavigate();
+
+  const handleAction = async (path, activityData) => {
+    // Fire-and-forget activity log — don't block navigation
+    logActivity(activityData).catch(() => { });
+    navigate(path);
+  };
 
   const quickActions = [
     {
       label: 'Start New Case',
       icon: 'FolderPlus',
       variant: 'default',
-      onClick: () => navigate('/legal-timeline-tracker')
+      onClick: () => handleAction('/legal-timeline-tracker', {
+        type: 'case',
+        title: 'Started New Case',
+        description: 'Navigated to Timeline Tracker to create a new case',
+        link: '/legal-timeline-tracker',
+        icon: 'FolderOpen',
+        iconColor: 'var(--color-primary)'
+      })
     },
     {
       label: 'Ask AI Question',
       icon: 'MessageSquare',
       variant: 'secondary',
-      onClick: () => navigate('/legal-steps-generator')
+      onClick: () => handleAction('/legal-steps-generator', {
+        type: 'chat',
+        title: 'AI Legal Consultation',
+        description: 'Started a new AI legal consultation session',
+        link: '/legal-steps-generator',
+        icon: 'MessageSquare',
+        iconColor: 'var(--color-secondary)'
+      })
     },
     {
       label: 'Upload Document',
       icon: 'Upload',
       variant: 'outline',
-      onClick: () => navigate('/legal-library')
+      onClick: () => handleAction('/document-vault', {
+        type: 'document',
+        title: 'Document Vault Visited',
+        description: 'Navigated to Document Vault to upload a document',
+        link: '/document-vault',
+        icon: 'FileText',
+        iconColor: 'var(--color-success)'
+      })
     }
   ];
 

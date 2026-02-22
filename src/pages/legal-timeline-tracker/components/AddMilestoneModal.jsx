@@ -30,21 +30,13 @@ const AddMilestoneModal = ({ isOpen, onClose, onAddMilestone }) => {
 
     const handleSubmit = () => {
         if (validateForm()) {
-            // Format date for display
-            const formattedDate = new Date(formData.dueDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
-
+            // Pass raw ISO date — backend parses it to a Date
             onAddMilestone({
                 title: formData.title,
                 description: formData.description,
-                dueDate: formattedDate
+                dueDate: formData.dueDate
             });
-
-            // Reset form
-            setFormData({
-                title: "",
-                description: "",
-                dueDate: new Date().toISOString().split('T')[0]
-            });
+            setFormData({ title: '', description: '', dueDate: new Date().toISOString().split('T')[0] });
             onClose();
         }
     };

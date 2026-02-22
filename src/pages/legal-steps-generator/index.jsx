@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { logActivity, generateActionPlan, createCase } from '../../utils/api';
+import { Link, useNavigate } from 'react-router-dom';
+import html2pdf from 'html2pdf.js';
 import Header from '../../components/ui/Header';
 import EmergencyAlertBanner from '../../components/ui/EmergencyAlertBanner';
 import CaseStatusIndicator from '../../components/ui/CaseStatusIndicator';
@@ -12,250 +14,50 @@ import DisclaimerSection from './components/DisclaimerSection';
 import EmptyState from './components/EmptyState';
 
 const LegalStepsGenerator = () => {
+  const navigate = useNavigate();
+
+  // Track page visit as AI Consultation activity
+  useEffect(() => {
+    logActivity({
+      type: 'chat',
+      title: 'AI Legal Consultation',
+      description: 'Visited Legal Steps Generator for AI-powered legal guidance',
+      link: '/legal-steps-generator',
+      icon: 'MessageSquare',
+      iconColor: 'var(--color-secondary)'
+    }).catch(() => { });
+  }, []);
+
   const [problemDescription, setProblemDescription] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
   const [generatedSteps, setGeneratedSteps] = useState(null);
   const [expandedSteps, setExpandedSteps] = useState({});
 
-  const mockGeneratedPlan = {
-    category: 'consumer',
-    totalSteps: 6,
-    estimatedDuration: '45-60 days',
-    complexity: 'medium',
-    consultationPoints: [
-      'If the seller refuses to respond after legal notice',
-      'Before filing a consumer court case',
-      'If the claim amount exceeds ₹10 lakhs'
-    ],
-    steps: [
-      {
-        id: 1,
-        title: 'Document Collection and Evidence Gathering',
-        description: 'Collect all relevant documents and evidence to support your consumer complaint.',
-        priority: 'high',
-        timeLimit: '1-2 days',
-        cost: 'Free',
-        detailedSteps: [
-          'Gather original purchase invoice/receipt showing transaction details',
-          'Collect warranty card and product packaging if available',
-          'Take clear photographs/videos of the defective product',
-          'Save all email correspondence with the seller',
-          'Document any verbal communication (dates, names, conversation summary)',
-          'Collect bank statements showing payment transaction'
-        ],
-        requiredDocuments: [
-          'Purchase Invoice/Receipt',
-          'Warranty Card',
-          'Product Photos/Videos',
-          'Email Correspondence',
-          'Bank Statement',
-          'Identity Proof (Aadhaar/PAN)'
-        ],
-        legalSections: [
-          {
-            section: 'Consumer Protection Act, 2019 - Section 2(7)',
-            description: 'Defines consumer rights and defective goods'
-          },
-          {
-            section: 'Consumer Protection Act, 2019 - Section 35',
-            description: 'Right to file complaint for defective goods'
-          }
-        ],
-        tips: [
-          'Keep original documents safe and make multiple copies',
-          'Organize documents chronologically for easy reference',
-          'Create a timeline of events with dates and details'
-        ]
-      },
-      {
-        id: 2,
-        title: 'Send Formal Complaint to Seller',
-        description: 'Draft and send a formal written complaint to the seller requesting replacement or refund.',
-        priority: 'high',
-        timeLimit: '3-5 days',
-        cost: 'Free (₹50-100 for courier)',
-        detailedSteps: [
-          'Draft a formal complaint letter stating the issue clearly',
-          'Include purchase details, defect description, and your demand (replacement/refund)',
-          'Attach copies of supporting documents',
-          'Send via registered post/speed post for proof of delivery',
-          'Keep acknowledgment receipt and tracking number',
-          'Send a copy via email for faster communication'
-        ],
-        requiredDocuments: [
-          'Complaint Letter',
-          'Copy of Invoice',
-          'Product Defect Photos',
-          'Postal Receipt'
-        ],
-        legalSections: [
-          {
-            section: 'Consumer Protection Act, 2019 - Section 18',
-            description: 'Consumer rights against defective goods'
-          }
-        ],
-        tips: [
-          'Be polite but firm in your complaint letter',
-          'Clearly state your expected resolution',
-          'Give a reasonable deadline (7-15 days) for response',
-          'Keep copies of all sent documents'
-        ]
-      },
-      {
-        id: 3,
-        title: 'Wait for Seller Response',
-        description: 'Allow reasonable time for the seller to respond and resolve the issue.',
-        priority: 'medium',
-        timeLimit: '7-15 days',
-        cost: 'Free',
-        detailedSteps: [
-          'Monitor email and phone for seller communication',
-          'Track registered post delivery status online',
-          'Document any response received from seller',
-          'If seller offers resolution, verify terms before accepting',
-          'If no response, prepare for next legal step'
-        ],
-        requiredDocuments: [
-          'Delivery Confirmation',
-          'Any Response from Seller'
-        ],
-        legalSections: [],
-        tips: [
-          'Be patient but keep track of deadlines',
-          'Save all communication for future reference',
-          'Do not accept partial solutions if not satisfactory'
-        ]
-      },
-      {
-        id: 4,
-        title: 'Send Legal Notice',
-        description: 'If seller does not respond or refuses to resolve, send a legal notice through a lawyer.',
-        priority: 'high',
-        timeLimit: '5-7 days',
-        cost: '₹2,000-5,000 (lawyer fees)',
-        detailedSteps: [
-          'Consult a consumer rights lawyer',
-          'Provide all documents and case details to lawyer',
-          'Lawyer will draft legal notice citing Consumer Protection Act',
-          'Notice will demand replacement/refund within 15 days',
-          'Send notice via registered post and email',
-          'Keep copy of notice and postal receipt'
-        ],
-        requiredDocuments: [
-          'All Previous Documents',
-          'Lawyer Consultation Notes',
-          'Legal Notice Copy',
-          'Postal Receipt'
-        ],
-        legalSections: [
-          {
-            section: 'Consumer Protection Act, 2019 - Section 35',
-            description: 'Right to file complaint and seek redressal'
-          },
-          {
-            section: 'Consumer Protection Act, 2019 - Section 84',
-            description: 'Penalties for non-compliance'
-          }
-        ],
-        tips: [
-          'Choose a lawyer experienced in consumer cases',
-          'Legal notice often prompts quick resolution',
-          'Keep all communication professional and documented'
-        ]
-      },
-      {
-        id: 5,
-        title: 'File Consumer Court Complaint',
-        description: 'If legal notice fails, file a formal complaint in the appropriate consumer court.',
-        priority: 'high',
-        timeLimit: '10-15 days',
-        cost: '₹200-500 (court fees)',
-        detailedSteps: [
-          'Determine correct consumer forum based on claim amount:\n- District Forum: Up to ₹1 crore\n- State Commission: ₹1-10 crore\n- National Commission: Above ₹10 crore',
-          'Draft consumer complaint with all details',
-          'Attach all supporting documents and affidavit',
-          'Pay prescribed court fees',
-          'Submit complaint at consumer forum office',
-          'Obtain acknowledgment and case number'
-        ],
-        requiredDocuments: [
-          'Consumer Complaint Form',
-          'All Supporting Documents',
-          'Affidavit',
-          'Court Fee Receipt',
-          'Identity Proof',
-          'Address Proof'
-        ],
-        legalSections: [
-          {
-            section: 'Consumer Protection Act, 2019 - Section 34',
-            description: 'Jurisdiction of District Consumer Disputes Redressal Commission'
-          },
-          {
-            section: 'Consumer Protection Act, 2019 - Section 47',
-            description: 'Procedure for filing complaints'
-          }
-        ],
-        tips: [
-          'File complaint within 2 years of cause of action',
-          'Ensure all documents are properly attested',
-          'Consider hiring a lawyer for court representation'
-        ]
-      },
-      {
-        id: 6,
-        title: 'Attend Court Hearings and Follow-up',
-        description: 'Attend scheduled court hearings and follow court procedures until resolution.',
-        priority: 'medium',
-        timeLimit: '3-6 months',
-        cost: 'Variable (lawyer fees if hired)',
-        detailedSteps: [
-          'Receive court hearing notice via post/SMS',
-          'Attend all scheduled hearings on time',
-          'Present your case and evidence to the court',
-          'Respond to any queries from the court',
-          'If seller does not appear, request ex-parte proceedings',
-          'Follow court orders and submit any additional documents requested',
-          'Await final judgment and order'
-        ],
-        requiredDocuments: [
-          'Court Notices',
-          'Additional Evidence (if requested)',
-          'Hearing Attendance Records'
-        ],
-        legalSections: [
-          {
-            section: 'Consumer Protection Act, 2019 - Section 58',
-            description: 'Procedure for hearing complaints'
-          },
-          {
-            section: 'Consumer Protection Act, 2019 - Section 69',
-            description: 'Enforcement of orders'
-          }
-        ],
-        tips: [
-          'Never miss court hearings - it can weaken your case',
-          'Dress formally and speak respectfully in court',
-          'Keep copies of all court documents',
-          'If you win, ensure timely execution of court order'
-        ]
-      }
-    ]
-  };
-
-  const handleGenerate = () => {
+  const handleGenerate = async () => {
     if (!problemDescription || problemDescription?.length < 50 || !selectedCategory) {
       return;
     }
 
     setIsGenerating(true);
-    
-    setTimeout(() => {
-      setGeneratedSteps(mockGeneratedPlan);
+    setGeneratedSteps(null);
+
+    try {
+      const response = await generateActionPlan(problemDescription, selectedCategory);
+      if (response && response.plan) {
+        setGeneratedSteps(response.plan);
+        if (response.plan.steps && response.plan.steps.length > 0) {
+          setExpandedSteps({ [response.plan.steps[0].id]: true });
+        }
+      }
+    } catch (error) {
+      console.error('Failed to generate action plan:', error);
+      alert('Failed to generate action plan. Please try again.');
+    } finally {
       setIsGenerating(false);
-      setExpandedSteps({ 1: true });
-    }, 2000);
+    }
   };
 
   const toggleStepExpansion = (stepId) => {
@@ -276,11 +78,86 @@ const LegalStepsGenerator = () => {
     setExpandedSteps({});
   };
 
+  const handleExportPDF = async () => {
+    setIsExporting(true);
+    const element = document.getElementById('action-plan-content');
+
+    // Quick expand all steps for the PDF payload so details aren't hidden
+    const allExpanded = {};
+    generatedSteps?.steps?.forEach(s => allExpanded[s.id] = true);
+    setExpandedSteps(allExpanded);
+
+    // Give state a moment to update the DOM before capturing PDF
+    setTimeout(() => {
+      const opt = {
+        margin: 10,
+        filename: `Legal_Action_Plan_${new Date().getTime()}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      html2pdf().from(element).set(opt).save().then(() => {
+        setIsExporting(false);
+      }).catch(err => {
+        console.error("PDF Export Error: ", err);
+        setIsExporting(false);
+        alert('Failed to generate PDF');
+      });
+    }, 500);
+  };
+
+  const handleCreateCase = async () => {
+    setIsCreating(true);
+    try {
+      const milestones = generatedSteps?.steps?.map((step) => ({
+        id: step.id,
+        title: step.title,
+        description: step.description,
+        date: new Date().toISOString(), // Initial creation date
+        completed: false
+      })) || [];
+
+      // Calculate an estimated deadline by parsing the "3-6 months" string loosely, or defaulting to +30 days
+      const daysEstimate = 30; // fallback
+      const deadlineDate = new Date();
+      deadlineDate.setDate(deadlineDate.getDate() + daysEstimate);
+
+      const caseData = {
+        title: problemDescription.substring(0, 50) + (problemDescription.length > 50 ? '...' : ''),
+        status: 'active',
+        category: selectedCategory,
+        deadlineDate: deadlineDate.toISOString(),
+        milestones: milestones
+      };
+
+      await createCase(caseData);
+
+      logActivity({
+        type: 'case',
+        title: 'New Case Timeline Created',
+        description: `Generated AI timeline tracker for: ${selectedCategory}`,
+        link: '/legal-timeline-tracker',
+        icon: 'Calendar',
+        iconColor: 'var(--color-primary)'
+      }).catch(() => { });
+
+      // Navigate to the timeline tracker to view the newly created tracker
+      navigate('/legal-timeline-tracker');
+
+    } catch (err) {
+      console.error("Failed to create timeline case: ", err);
+      alert('Failed to save Timeline Case. Ensure you are logged in.');
+    } finally {
+      setIsCreating(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
       <EmergencyAlertBanner />
-      <CaseStatusIndicator activeCases={2} urgentDeadlines={1} />
+      <CaseStatusIndicator />
       <OfflineStatusIndicator />
       <main className="pt-16 lg:pt-20">
         <div className="mx-4 lg:mx-6 py-6 lg:py-8">
@@ -333,7 +210,7 @@ const LegalStepsGenerator = () => {
 
               {generatedSteps && !isGenerating && (
                 <>
-                  <div className="bg-card rounded-xl border border-border shadow-elevation-2 p-6 lg:p-8">
+                  <div id="action-plan-content" className="bg-card rounded-xl border border-border shadow-elevation-2 p-6 lg:p-8">
                     <div className="flex items-start justify-between gap-4 mb-6">
                       <div className="flex-1">
                         <h2 className="text-2xl lg:text-3xl font-heading font-semibold text-foreground mb-2">
@@ -346,6 +223,7 @@ const LegalStepsGenerator = () => {
                       <button
                         onClick={handleReset}
                         className="flex-shrink-0 flex items-center gap-2 px-4 py-2 border border-border text-foreground rounded-lg hover:bg-muted transition-smooth"
+                        data-html2canvas-ignore="true"
                       >
                         <Icon name="RotateCcw" size={16} color="currentColor" />
                         <span className="hidden sm:inline text-sm font-medium">New Plan</span>
@@ -366,18 +244,22 @@ const LegalStepsGenerator = () => {
                     </div>
                   </div>
 
-                  <DisclaimerSection />
+                  <DisclaimerSection data-html2canvas-ignore="true" />
                 </>
               )}
             </div>
 
-            <div className="lg:col-span-1">
+            <div className="lg:col-span-1" data-html2canvas-ignore="true">
               {generatedSteps && !isGenerating && (
                 <TimelineOverview
                   totalSteps={generatedSteps?.totalSteps}
                   estimatedDuration={generatedSteps?.estimatedDuration}
                   complexity={generatedSteps?.complexity}
                   consultationPoints={generatedSteps?.consultationPoints}
+                  onExportPDF={handleExportPDF}
+                  onCreateCase={handleCreateCase}
+                  isExporting={isExporting}
+                  isCreating={isCreating}
                 />
               )}
             </div>

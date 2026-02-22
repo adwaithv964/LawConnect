@@ -4,34 +4,34 @@ import Icon from '../../../components/AppIcon';
 import Select from '../../../components/ui/Select';
 import Button from '../../../components/ui/Button';
 
-const ProblemInputSection = ({ 
-  problemDescription, 
+const ProblemInputSection = ({
+  problemDescription,
   setProblemDescription,
   selectedCategory,
   setSelectedCategory,
   onGenerate,
-  isGenerating 
+  isGenerating
 }) => {
   const categoryOptions = [
-    { value: 'consumer', label: 'Consumer Rights', description: 'Product defects, service issues, refunds' },
-    { value: 'property', label: 'Property Disputes', description: 'Land, rent, ownership issues' },
-    { value: 'cyber', label: 'Cyber Crime', description: 'Online fraud, hacking, identity theft' },
-    { value: 'family', label: 'Family Law', description: 'Marriage, divorce, custody matters' },
-    { value: 'employment', label: 'Employment', description: 'Workplace rights, termination, salary' },
-    { value: 'criminal', label: 'Criminal Matters', description: 'FIR, bail, legal defense' }
+    { value: 'Consumer Rights', label: 'Consumer Rights', description: 'Product defects, service issues, refunds' },
+    { value: 'Property Dispute', label: 'Property Disputes', description: 'Land, rent, ownership issues' },
+    { value: 'Cyber Fraud', label: 'Cyber Crime', description: 'Online fraud, hacking, identity theft' },
+    { value: 'Family Law', label: 'Family Law', description: 'Marriage, divorce, custody matters' },
+    { value: 'Employment', label: 'Employment', description: 'Workplace rights, termination, salary' },
+    { value: 'Criminal', label: 'Criminal Matters', description: 'FIR, bail, legal defense' }
   ];
 
   const exampleScenarios = [
     {
-      category: 'consumer',
+      category: 'Consumer Rights',
       text: "I purchased a mobile phone online 2 months ago. It stopped working after 45 days. The seller is refusing to replace or refund despite valid warranty."
     },
     {
-      category: 'property',
+      category: 'Property Dispute',
       text: "My landlord is not returning my security deposit of ₹50,000 even after 3 months of vacating the property. He claims false damages."
     },
     {
-      category: 'cyber',
+      category: 'Cyber Fraud',
       text: "Someone hacked my bank account and transferred ₹1,20,000. The bank is not responding to my complaint filed 10 days ago."
     }
   ];

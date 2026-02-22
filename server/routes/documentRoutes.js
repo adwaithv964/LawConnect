@@ -3,6 +3,7 @@ const router = express.Router();
 const upload = require('../middleware/upload');
 const Document = require('../models/Document');
 const User = require('../models/User');
+const ActivityLog = require('../models/ActivityLog');
 const bcrypt = require('bcryptjs');
 
 // @desc    Upload a document
@@ -45,6 +46,17 @@ router.post('/upload', upload.single('file'), async (req, res) => {
         });
 
         await doc.save();
+
+        // Auto-log activity for dashboard
+        await ActivityLog.create({
+            userId: user._id,
+            type: 'document',
+            title: `Document Uploaded: ${req.file.originalname}`,
+            description: `Category: ${category || 'Uncategorized'} · ${(req.file.size / 1024).toFixed(1)} KB`,
+            link: '/document-vault',
+            icon: 'FileText',
+            iconColor: 'var(--color-success)'
+        });
 
         res.status(201).json({
             _id: doc._id,

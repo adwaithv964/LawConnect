@@ -2,18 +2,28 @@ import React, { useState } from 'react';
 import Icon from '../../../components/AppIcon';
 import Button from '../../../components/ui/Button';
 
-const CaseCard = ({ caseData, onExpand, isExpanded, onUpdateMilestone, onAddNote, onShare, onEdit, onAddMilestone }) => {
+const CaseCard = ({
+  caseData, onExpand, isExpanded,
+  onUpdateMilestone, onAddNote, onShare, onEdit, onDelete, onAddMilestone,
+  isDeleting
+}) => {
   const [showNoteForm, setShowNoteForm] = useState(false);
-  const [noteText, setNoteText] = useState("");
+  const [noteText, setNoteText] = useState('');
+  const [confirmDelete, setConfirmDelete] = useState(false);
+
+  // Use MongoDB _id or fallback id (after normalisation in parent, id = _id)
+  const caseId = caseData?._id || caseData?.id;
 
   const getStatusColor = (status) => {
     const colors = {
       'Active': 'bg-primary/10 text-primary border-primary/20',
       'Pending': 'bg-warning/10 text-warning border-warning/20',
       'Completed': 'bg-success/10 text-success border-success/20',
-      'On Hold': 'bg-muted text-muted-foreground border-border'
+      'Resolved': 'bg-success/10 text-success border-success/20',
+      'On Hold': 'bg-muted text-muted-foreground border-border',
+      'Closed': 'bg-muted text-muted-foreground border-border'
     };
-    return colors?.[status] || 'bg-muted text-muted-foreground border-border';
+    return colors[status] || 'bg-muted text-muted-foreground border-border';
   };
 
   const getPriorityIcon = (priority) => {
@@ -22,12 +32,22 @@ const CaseCard = ({ caseData, onExpand, isExpanded, onUpdateMilestone, onAddNote
     return { name: 'Info', color: 'var(--color-muted-foreground)' };
   };
 
-  const handleAddNote = () => {
+  const handleSaveNote = () => {
     if (noteText?.trim()) {
-      onAddNote(caseData?.id, noteText);
-      setNoteText("");
+      onAddNote(caseId, noteText);
+      setNoteText('');
       setShowNoteForm(false);
     }
+  };
+
+  const handleDelete = () => {
+    if (!confirmDelete) {
+      setConfirmDelete(true);
+      setTimeout(() => setConfirmDelete(false), 3000); // auto-reset after 3 s
+      return;
+    }
+    onDelete && onDelete(caseId);
+    setConfirmDelete(false);
   };
 
   const priorityIcon = getPriorityIcon(caseData?.priority);
@@ -35,13 +55,14 @@ const CaseCard = ({ caseData, onExpand, isExpanded, onUpdateMilestone, onAddNote
   return (
     <div className="bg-card border border-border rounded-xl shadow-elevation-2 overflow-hidden transition-smooth hover:shadow-elevation-3">
       <div className="p-4 md:p-6">
+        {/* Header row */}
         <div className="flex items-start justify-between gap-4 mb-4">
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-2">
               <h3 className="text-lg md:text-xl font-heading font-semibold text-foreground">
                 {caseData?.title}
               </h3>
-              <Icon name={priorityIcon?.name} size={18} color={priorityIcon?.color} />
+              <Icon name={priorityIcon.name} size={18} color={priorityIcon.color} />
             </div>
             <div className="flex flex-wrap items-center gap-2 md:gap-3 text-sm text-muted-foreground">
               <span className="flex items-center gap-1">
@@ -54,48 +75,77 @@ const CaseCard = ({ caseData, onExpand, isExpanded, onUpdateMilestone, onAddNote
               </span>
             </div>
           </div>
-          <div className="flex items-center gap-2">
+
+          <div className="flex items-center gap-2 flex-shrink-0">
+            {/* Edit */}
             <Button
               variant="ghost"
               size="sm"
               iconName="Edit"
-              onClick={() => onEdit && onEdit(caseData.id)}
+              onClick={() => onEdit && onEdit(caseId)}
               className="h-8 w-8 p-0"
             />
+            {/* Delete with single-click confirmation */}
+            <button
+              onClick={handleDelete}
+              disabled={isDeleting}
+              title={confirmDelete ? 'Click again to confirm delete' : 'Delete case'}
+              className={`
+                flex items-center justify-center h-8 w-8 rounded-lg transition-smooth
+                ${confirmDelete
+                  ? 'bg-accent/20 text-accent border border-accent/30 animate-pulse'
+                  : 'text-muted-foreground hover:bg-accent/10 hover:text-accent'}
+                ${isDeleting ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
+              `}
+            >
+              {isDeleting
+                ? <div className="w-3 h-3 border-2 border-accent border-t-transparent rounded-full animate-spin" />
+                : <Icon name={confirmDelete ? 'AlertTriangle' : 'Trash2'} size={16} color="currentColor" />
+              }
+            </button>
+            {/* Status badge */}
             <span className={`px-3 py-1 rounded-lg text-xs md:text-sm font-medium border ${getStatusColor(caseData?.status)}`}>
               {caseData?.status}
             </span>
           </div>
         </div>
 
+        {/* Next action + progress */}
         <div className="flex items-center justify-between p-3 md:p-4 bg-muted/50 rounded-lg mb-4">
           <div className="flex items-center gap-2">
             <Icon name="Clock" size={18} color="var(--color-primary)" />
             <div>
               <p className="text-xs text-muted-foreground">Next Action Due</p>
-              <p className="text-sm md:text-base font-medium text-foreground">{caseData?.nextActionDate}</p>
+              <p className="text-sm md:text-base font-medium text-foreground">{caseData?.nextActionDate || 'TBD'}</p>
             </div>
           </div>
           <div className="text-right">
             <p className="text-xs text-muted-foreground">Progress</p>
-            <p className="text-lg md:text-xl font-semibold text-primary">{caseData?.completionPercentage}%</p>
+            <p className="text-lg md:text-xl font-semibold text-primary">{caseData?.completionPercentage ?? 0}%</p>
           </div>
         </div>
 
+        {/* Progress bar */}
         <div className="w-full bg-muted rounded-full h-2 mb-4">
           <div
-            className="bg-primary h-2 rounded-full transition-smooth"
-            style={{ width: `${caseData?.completionPercentage}%` }}
+            className="bg-primary h-2 rounded-full transition-all duration-500"
+            style={{ width: `${caseData?.completionPercentage ?? 0}%` }}
           />
         </div>
 
+        {/* Description (if set) */}
+        {caseData?.description && (
+          <p className="text-sm text-muted-foreground mb-4 line-clamp-2">{caseData.description}</p>
+        )}
+
+        {/* Action buttons */}
         <div className="flex flex-wrap gap-2">
           <Button
             variant="outline"
             size="sm"
-            iconName={isExpanded ? "ChevronUp" : "ChevronDown"}
+            iconName={isExpanded ? 'ChevronUp' : 'ChevronDown'}
             iconPosition="right"
-            onClick={() => onExpand(caseData?.id)}
+            onClick={() => onExpand(caseId)}
           >
             {isExpanded ? 'Hide Timeline' : 'View Timeline'}
           </Button>
@@ -113,105 +163,100 @@ const CaseCard = ({ caseData, onExpand, isExpanded, onUpdateMilestone, onAddNote
             size="sm"
             iconName="Share2"
             iconPosition="left"
-            onClick={() => onShare && onShare(caseData?.id)}
+            onClick={() => onShare && onShare(caseId)}
           >
             Share
           </Button>
         </div>
 
+        {/* Confirm delete hint */}
+        {confirmDelete && (
+          <p className="mt-2 text-xs text-accent font-medium">
+            ⚠ Click the trash icon again to confirm deletion
+          </p>
+        )}
+
+        {/* Note form */}
         {showNoteForm && (
           <div className="mt-4 p-4 bg-muted/30 rounded-lg">
             <textarea
               value={noteText}
-              onChange={(e) => setNoteText(e?.target?.value)}
+              onChange={(e) => setNoteText(e.target.value)}
               placeholder="Add a note about this case..."
               className="w-full min-h-[100px] p-3 bg-background border border-border rounded-lg text-sm text-foreground resize-none focus:outline-none focus:ring-2 focus:ring-primary"
             />
             <div className="flex gap-2 mt-3">
-              <Button
-                variant="default"
-                size="sm"
-                onClick={handleAddNote}
-              >
-                Save Note
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => {
-                  setShowNoteForm(false);
-                  setNoteText("");
-                }}
-              >
-                Cancel
-              </Button>
+              <Button variant="default" size="sm" onClick={handleSaveNote}>Save Note</Button>
+              <Button variant="ghost" size="sm" onClick={() => { setShowNoteForm(false); setNoteText(''); }}>Cancel</Button>
             </div>
           </div>
         )}
       </div>
+
+      {/* Timeline expansion */}
       {isExpanded && (
         <div className="border-t border-border p-4 md:p-6 bg-muted/20">
           <h4 className="text-base md:text-lg font-heading font-semibold text-foreground mb-4">
             Case Timeline
           </h4>
-          <div className="space-y-4">
-            {caseData?.milestones?.map((milestone, index) => (
-              <div key={milestone?.id} className="flex gap-4">
-                <div className="flex flex-col items-center">
-                  <button
-                    onClick={() => onUpdateMilestone(caseData?.id, milestone?.id, !milestone?.completed)}
-                    className={`
-                      flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-full border-2 transition-smooth
-                      ${milestone?.completed
-                        ? 'bg-success border-success'
-                        : milestone?.status === 'current' ? 'bg-primary border-primary' : 'bg-background border-border'
-                      }
-                    `}
-                  >
-                    {milestone?.completed && (
-                      <Icon name="Check" size={18} color="var(--color-success-foreground)" />
-                    )}
-                  </button>
-                  {index < caseData?.milestones?.length - 1 && (
-                    <div className={`w-0.5 h-16 ${milestone?.completed ? 'bg-success' : 'bg-border'}`} />
-                  )}
-                </div>
-                <div className="flex-1 pb-4">
-                  <div className="flex items-start justify-between gap-4 mb-2">
-                    <h5 className="text-sm md:text-base font-medium text-foreground">
-                      {milestone?.title}
-                    </h5>
-                    <span className="text-xs text-muted-foreground whitespace-nowrap">
-                      {milestone?.dueDate}
-                    </span>
-                  </div>
-                  <p className="text-sm text-muted-foreground mb-2">
-                    {milestone?.description}
-                  </p>
-                  {milestone?.documents && milestone?.documents?.length > 0 && (
-                    <div className="flex flex-wrap gap-2">
-                      {milestone?.documents?.map((doc, idx) => (
-                        <span key={idx} className="flex items-center gap-1 px-2 py-1 bg-background border border-border rounded text-xs text-foreground">
-                          <Icon name="Paperclip" size={12} color="currentColor" />
-                          {doc}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
 
-          {/* Notes Section */}
+          {(!caseData?.milestones || caseData.milestones.length === 0) ? (
+            <p className="text-sm text-muted-foreground">No milestones yet. Add one below.</p>
+          ) : (
+            <div className="space-y-4">
+              {caseData.milestones.map((milestone, index) => (
+                <div key={milestone._id || milestone.id} className="flex gap-4">
+                  <div className="flex flex-col items-center">
+                    <button
+                      onClick={() => onUpdateMilestone(caseId, milestone._id || milestone.id, !milestone.completed)}
+                      className={`flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-full border-2 transition-smooth ${milestone.completed
+                          ? 'bg-success border-success'
+                          : milestone.status === 'current'
+                            ? 'bg-primary border-primary'
+                            : 'bg-background border-border'
+                        }`}
+                    >
+                      {milestone.completed && (
+                        <Icon name="Check" size={18} color="var(--color-success-foreground)" />
+                      )}
+                    </button>
+                    {index < caseData.milestones.length - 1 && (
+                      <div className={`w-0.5 h-16 ${milestone.completed ? 'bg-success' : 'bg-border'}`} />
+                    )}
+                  </div>
+                  <div className="flex-1 pb-4">
+                    <div className="flex items-start justify-between gap-4 mb-1">
+                      <h5 className={`text-sm md:text-base font-medium ${milestone.completed ? 'text-muted-foreground line-through' : 'text-foreground'}`}>
+                        {milestone.title}
+                      </h5>
+                      <span className="text-xs text-muted-foreground whitespace-nowrap">{milestone.dueDate}</span>
+                    </div>
+                    {milestone.description && (
+                      <p className="text-sm text-muted-foreground mb-2">{milestone.description}</p>
+                    )}
+                    {milestone.documents && milestone.documents.length > 0 && (
+                      <div className="flex flex-wrap gap-2">
+                        {milestone.documents.map((doc, idx) => (
+                          <span key={idx} className="flex items-center gap-1 px-2 py-1 bg-background border border-border rounded text-xs text-foreground">
+                            <Icon name="Paperclip" size={12} color="currentColor" />
+                            {doc}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Notes */}
           {caseData?.notes && caseData.notes.length > 0 && (
             <div className="mt-8 pt-6 border-t border-border/50">
-              <h4 className="text-base md:text-lg font-heading font-semibold text-foreground mb-4">
-                Case Notes
-              </h4>
+              <h4 className="text-base md:text-lg font-heading font-semibold text-foreground mb-4">Case Notes</h4>
               <div className="space-y-3">
                 {caseData.notes.map((note) => (
-                  <div key={note.id} className="p-3 bg-background border border-border rounded-lg">
+                  <div key={note._id || note.id} className="p-3 bg-background border border-border rounded-lg">
                     <p className="text-sm text-foreground mb-1">{note.text}</p>
                     <p className="text-xs text-muted-foreground">{note.date}</p>
                   </div>
@@ -220,14 +265,15 @@ const CaseCard = ({ caseData, onExpand, isExpanded, onUpdateMilestone, onAddNote
             </div>
           )}
 
+          {/* Add Milestone button */}
           <div className="mt-4 pt-4 border-t border-border/50 flex justify-center">
             <Button
               variant="outline"
               size="sm"
               iconName="PlusCircle"
               iconPosition="left"
-              onClick={() => onAddMilestone && onAddMilestone(caseData.id)}
-              className="w-full md:w-auto dashed border-dashed border-2"
+              onClick={() => onAddMilestone && onAddMilestone(caseId)}
+              className="w-full md:w-auto border-dashed border-2"
             >
               Add Custom Milestone
             </Button>

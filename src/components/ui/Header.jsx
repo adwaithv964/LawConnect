@@ -28,6 +28,11 @@ const Header = () => {
       icon: 'BookOpen'
     },
     {
+      label: 'Legal News',
+      path: '/legal-news',
+      icon: 'Newspaper'
+    },
+    {
       label: 'Documents',
       path: '/document-vault',
       icon: 'Lock'

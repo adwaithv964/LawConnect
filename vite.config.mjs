@@ -20,7 +20,7 @@ export default defineConfig({
       registerType: 'autoUpdate',
       injectRegister: 'auto',
       devOptions: {
-        enabled: true
+        enabled: false
       },
       workbox: {
         cleanupOutdatedCaches: true,
@@ -34,9 +34,9 @@ export default defineConfig({
         description: "Connect with legal professionals securely.",
         icons: [
           {
-            src: "favicon.ico",
+            src: "pwa-192x192.png",
             sizes: "64x64 32x32 24x24 16x16",
-            type: "image/x-icon"
+            type: "image/png"
           },
           {
             src: "pwa-192x192.png",
@@ -58,7 +58,7 @@ export default defineConfig({
   ],
   server: {
     port: "4028",
-    host: "0.0.0.0",
+    host: true,
     strictPort: true,
     allowedHosts: ['.amazonaws.com', '.builtwithrocket.new']
   }

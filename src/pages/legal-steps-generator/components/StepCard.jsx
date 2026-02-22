@@ -21,6 +21,57 @@ const StepCard = ({ step, stepNumber, isExpanded, onToggleExpand, onComplete }) 
     }
   };
 
+  const handleDownloadTemplate = () => {
+    const templateContent = `LEGAL TEMPLATE\n\nStep: ${step?.title}\n\nDescription: ${step?.description}\n\nInstructions:\n${step?.detailedSteps?.map((s, i) => `${i + 1}. ${s}`).join('\n')}\n\n[DRAFT YOUR CONTENT HERE]\n`;
+
+    const blob = new Blob([templateContent], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Template_Step_${stepNumber}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  const handleSetReminder = () => {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    // Format date for ICS (YYYYMMDDTHHMMSSZ)
+    const formatDate = (date) => {
+      return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+    };
+
+    const startDate = formatDate(tomorrow);
+    tomorrow.setHours(tomorrow.getHours() + 1);
+    const endDate = formatDate(tomorrow);
+
+    const icsContent = `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//LawConnect//ActionPlan//EN
+BEGIN:VEVENT
+UID:${new Date().getTime()}@lawconnect.in
+DTSTAMP:${formatDate(new Date())}
+DTSTART:${startDate}
+DTEND:${endDate}
+SUMMARY:LawConnect Reminder: ${step?.title}
+DESCRIPTION:${step?.description}
+END:VEVENT
+END:VCALENDAR`;
+
+    const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Reminder_Step_${stepNumber}.ics`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className={`
       bg-card rounded-xl border transition-smooth
@@ -77,10 +128,10 @@ const StepCard = ({ step, stepNumber, isExpanded, onToggleExpand, onComplete }) 
                 className="flex-shrink-0 p-2 hover:bg-muted rounded-lg transition-smooth"
                 aria-label={isExpanded ? 'Collapse details' : 'Expand details'}
               >
-                <Icon 
-                  name={isExpanded ? 'ChevronUp' : 'ChevronDown'} 
-                  size={20} 
-                  color="var(--color-muted-foreground)" 
+                <Icon
+                  name={isExpanded ? 'ChevronUp' : 'ChevronDown'}
+                  size={20}
+                  color="var(--color-muted-foreground)"
                 />
               </button>
             </div>
@@ -162,6 +213,7 @@ const StepCard = ({ step, stepNumber, isExpanded, onToggleExpand, onComplete }) 
                     iconName="Download"
                     iconPosition="left"
                     className="flex-1"
+                    onClick={handleDownloadTemplate}
                   >
                     Download Template
                   </Button>
@@ -171,6 +223,7 @@ const StepCard = ({ step, stepNumber, isExpanded, onToggleExpand, onComplete }) 
                     iconName="Bell"
                     iconPosition="left"
                     className="flex-1"
+                    onClick={handleSetReminder}
                   >
                     Set Reminder
                   </Button>

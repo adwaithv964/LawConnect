@@ -26,7 +26,7 @@ const DocumentGrid = ({ documents, viewMode, onDocumentClick, onDelete }) => {
         <div className="divide-y divide-border">
           {documents?.map((doc) => (
             <DocumentCard
-              key={doc?.id}
+              key={doc?._id || doc?.id}
               document={doc}
               viewMode="list"
               onClick={() => onDocumentClick(doc)}
@@ -42,7 +42,7 @@ const DocumentGrid = ({ documents, viewMode, onDocumentClick, onDelete }) => {
     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
       {documents?.map((doc) => (
         <DocumentCard
-          key={doc?.id}
+          key={doc?._id || doc?.id}
           document={doc}
           viewMode="grid"
           onClick={() => onDocumentClick(doc)}

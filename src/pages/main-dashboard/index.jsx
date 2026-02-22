@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Header from '../../components/ui/Header';
 import EmergencyAlertBanner from '../../components/ui/EmergencyAlertBanner';
 import DashboardFeatureCard from '../../components/ui/DashboardFeatureCard';
@@ -10,19 +10,47 @@ import RecentActivityPanel from './components/RecentActivityPanel';
 import EmergencySupportSection from './components/EmergencySupportSection';
 import UsageAnalyticsWidget from './components/UsageAnalyticsWidget';
 import LegalCategoryTrends from './components/LegalCategoryTrends';
+import { getDashboardSummary, timeAgo } from '../../utils/api';
 
 const MainDashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [userName, setUserName] = useState('');
+  const [error, setError] = useState(null);
+  const [dashboardData, setDashboardData] = useState(null);
+
+  const fetchDashboard = useCallback(async () => {
+    try {
+      setError(null);
+      const data = await getDashboardSummary();
+      setDashboardData(data);
+    } catch (err) {
+      console.error('Dashboard fetch error:', err);
+      setError(err.message);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
-    const storedName = localStorage.getItem('userName') || 'Rajesh Kumar';
-    setUserName(storedName);
-    
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 800);
-  }, []);
+    fetchDashboard();
+    // Poll every 60 seconds for live updates
+    const interval = setInterval(fetchDashboard, 60000);
+    return () => clearInterval(interval);
+  }, [fetchDashboard]);
+
+  // Derived values from live data (fall back gracefully if offline)
+  const stats = dashboardData?.stats || {};
+  const featureStats = dashboardData?.featureStats || {};
+  const rawDisplayName = dashboardData?.user?.displayName;
+  const userName = (rawDisplayName && rawDisplayName !== 'User')
+    ? rawDisplayName
+    : dashboardData?.user?.email?.split('@')[0]
+    || localStorage.getItem('userName')
+    || 'User';
+  const activeCases = stats.activeCases ?? 0;
+  const urgentDeadlines = stats.urgentDeadlines ?? 0;
+  const totalDocuments = stats.totalDocuments ?? 0;
+  const chatCount = stats.chatConsultations ?? 0;
+  const libraryCount = stats.libraryReads ?? 0;
 
   const mainFeatures = [
     {
@@ -30,8 +58,10 @@ const MainDashboard = () => {
       description: 'Get instant answers to your legal questions with our AI-powered assistant. Ask anything about Indian laws, rights, and procedures in simple language.',
       icon: 'MessageSquare',
       path: '/legal-steps-generator',
-      stats: '12 conversations',
-      recentActivity: 'Last used 5 hours ago',
+      stats: chatCount > 0 ? `${chatCount} consultations` : 'Start a session',
+      recentActivity: featureStats.aiChatbot?.lastUsed
+        ? `Last used ${timeAgo(featureStats.aiChatbot.lastUsed)}`
+        : 'Not used yet',
       variant: 'default'
     },
     {
@@ -39,8 +69,10 @@ const MainDashboard = () => {
       description: 'Convert your legal problem into a clear, step-by-step action plan with required documents, relevant laws, and time limits for resolution.',
       icon: 'ListChecks',
       path: '/legal-steps-generator',
-      stats: '8 plans generated',
-      recentActivity: 'Last generated 2 days ago',
+      stats: chatCount > 0 ? `${chatCount} plans generated` : 'Generate your first plan',
+      recentActivity: featureStats.legalSteps?.lastUsed
+        ? `Last generated ${timeAgo(featureStats.legalSteps.lastUsed)}`
+        : 'Not used yet',
       variant: 'default'
     },
     {
@@ -57,17 +89,21 @@ const MainDashboard = () => {
       description: 'Manage your legal cases with visual timeline tracking, milestone management, and automated reminders for important deadlines and hearings.',
       icon: 'Calendar',
       path: '/legal-timeline-tracker',
-      stats: '3 active cases',
-      recentActivity: 'Updated 2 hours ago',
+      stats: activeCases > 0 ? `${activeCases} active case${activeCases > 1 ? 's' : ''}` : 'No active cases',
+      recentActivity: featureStats.timeline?.lastUsed
+        ? `Updated ${timeAgo(featureStats.timeline.lastUsed)}`
+        : 'No activity yet',
       variant: 'default'
     },
     {
       title: 'Document Vault',
       description: 'Securely store and organize all your legal documents with auto-tagging, case linking, and easy retrieval whenever you need them.',
       icon: 'FolderLock',
-      path: '/legal-library',
-      stats: '8 documents stored',
-      recentActivity: 'Last upload 1 day ago',
+      path: '/document-vault',
+      stats: totalDocuments > 0 ? `${totalDocuments} document${totalDocuments > 1 ? 's' : ''} stored` : 'No documents yet',
+      recentActivity: featureStats.documents?.lastUsed
+        ? `Last upload ${timeAgo(featureStats.documents.lastUsed)}`
+        : 'No uploads yet',
       variant: 'default'
     },
     {
@@ -75,8 +111,10 @@ const MainDashboard = () => {
       description: 'Access comprehensive legal resources, articles, and guides covering various aspects of Indian law in easy-to-understand language.',
       icon: 'BookOpen',
       path: '/legal-library',
-      stats: '15 articles read',
-      recentActivity: 'Last read 3 days ago',
+      stats: libraryCount > 0 ? `${libraryCount} articles read` : 'Start reading',
+      recentActivity: featureStats.library?.lastUsed
+        ? `Last read ${timeAgo(featureStats.library.lastUsed)}`
+        : 'Not visited yet',
       variant: 'default'
     }
   ];
@@ -89,10 +127,21 @@ const MainDashboard = () => {
           <div className="mx-4 lg:mx-6">
             <div className="space-y-6">
               <div className="h-48 bg-muted rounded-xl animate-pulse" />
+              <div className="h-20 bg-muted rounded-xl animate-pulse" />
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
                 {[1, 2, 3, 4, 5, 6]?.map((i) => (
                   <div key={i} className="h-64 bg-muted rounded-xl animate-pulse" />
                 ))}
+              </div>
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div className="lg:col-span-2 space-y-6">
+                  <div className="h-64 bg-muted rounded-xl animate-pulse" />
+                  <div className="h-48 bg-muted rounded-xl animate-pulse" />
+                </div>
+                <div className="space-y-6">
+                  <div className="h-72 bg-muted rounded-xl animate-pulse" />
+                  <div className="h-64 bg-muted rounded-xl animate-pulse" />
+                </div>
               </div>
             </div>
           </div>
@@ -105,7 +154,7 @@ const MainDashboard = () => {
     <div className="min-h-screen bg-background">
       <Header />
       <EmergencyAlertBanner />
-      <CaseStatusIndicator activeCases={3} urgentDeadlines={1} />
+      <CaseStatusIndicator />
       <OfflineStatusIndicator />
       <main className="pt-32 lg:pt-36 pb-8 md:pb-12 lg:pb-16">
         <div className="mx-4 lg:mx-6">
@@ -113,6 +162,14 @@ const MainDashboard = () => {
             <WelcomeBanner userName={userName} />
 
             <QuickActionButtons />
+
+            {/* Error banner (non-blocking — still shows page with cached data) */}
+            {error && (
+              <div className="flex items-center gap-3 px-4 py-3 bg-warning/10 border border-warning/30 rounded-lg text-warning text-sm">
+                <span>⚠️ Could not reach the server. Showing last known data. Make sure the backend is running on port 5000.</span>
+                <button onClick={fetchDashboard} className="ml-auto underline font-medium">Retry</button>
+              </div>
+            )}
 
             <section>
               <h2 className="text-xl md:text-2xl lg:text-3xl font-heading font-semibold text-foreground mb-4 md:mb-6">
@@ -136,12 +193,12 @@ const MainDashboard = () => {
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
               <div className="lg:col-span-2 space-y-6 md:space-y-8">
-                <RecentActivityPanel />
-                <UsageAnalyticsWidget />
+                <RecentActivityPanel activities={dashboardData?.recentActivities || []} onRefresh={fetchDashboard} />
+                <UsageAnalyticsWidget stats={stats} />
               </div>
               <div className="space-y-6 md:space-y-8">
                 <EmergencySupportSection />
-                <LegalCategoryTrends />
+                <LegalCategoryTrends categoryBreakdown={dashboardData?.categoryBreakdown || {}} />
               </div>
             </div>
 
@@ -171,6 +228,11 @@ const MainDashboard = () => {
                     <span className="px-3 py-1 bg-secondary/10 text-secondary rounded-full text-xs font-medium">
                       Secure & Private
                     </span>
+                    {dashboardData?.user?.memberSince && (
+                      <span className="px-3 py-1 bg-muted text-muted-foreground rounded-full text-xs font-medium">
+                        Member since {new Date(dashboardData.user.memberSince).toLocaleDateString('en-IN', { month: 'short', year: 'numeric' })}
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>

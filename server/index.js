@@ -2,13 +2,19 @@ const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const connectDB = require('./db');
+const seedArticles = require('./seeds/seedArticles');
+
+const initCronJobs = require('./cron');
 
 // Load env vars
 dotenv.config({ path: '../.env' }); // Looking for .env in root
 
-connectDB();
-
+connectDB().then(() => {
+    seedArticles();
+    initCronJobs();
+});
 const app = express();
+
 
 app.use(cors());
 app.use(express.json());
@@ -19,9 +25,24 @@ app.get('/', (req, res) => {
 
 app.use('/api/users', require('./routes/userRoutes'));
 app.use('/api/documents', require('./routes/documentRoutes'));
+app.use('/api/cases', require('./routes/caseRoutes'));
+app.use('/api/activities', require('./routes/activityRoutes'));
+app.use('/api/dashboard', require('./routes/dashboardRoutes'));
+app.use('/api/articles', require('./routes/articleRoutes'));
+app.use('/api/news', require('./routes/newsRoutes'));
+app.use('/api/ai', require('./routes/aiRoutes'));
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
+});
+
+server.on('error', (err) => {
+    if (err.code === 'EADDRINUSE') {
+        console.error(`❌ Port ${PORT} is already in use. Another process is occupying this port.`);
+        console.error('   Run: netstat -ano | findstr :5000  — then: taskkill /F /PID <pid>');
+    } else {
+        throw err;
+    }
 });

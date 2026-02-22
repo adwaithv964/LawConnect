@@ -48,7 +48,7 @@ export function AuthProvider({ children }) {
                 body: JSON.stringify({
                     firebaseUid: user.uid,
                     email: user.email,
-                    displayName: user.displayName || 'User'
+                    displayName: user.displayName || user.email?.split('@')[0] || 'User'
                 }),
             });
         } catch (error) {
@@ -60,7 +60,12 @@ export function AuthProvider({ children }) {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
             setCurrentUser(user);
             if (user) {
+                localStorage.setItem('firebaseUid', user.uid);
+                localStorage.setItem('userName', user.displayName || user.email?.split('@')[0] || 'User');
                 await syncUserWithBackend(user);
+            } else {
+                localStorage.removeItem('firebaseUid');
+                localStorage.removeItem('userName');
             }
             setLoading(false);
         });
