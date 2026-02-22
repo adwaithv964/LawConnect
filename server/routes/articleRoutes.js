@@ -57,9 +57,16 @@ router.get('/', async (req, res) => {
 
         const query = {};
 
-        // Full-text search
+        // Search — case-insensitive regex across key fields
+        // (broader than $text so conversational queries like "landlord deposit" match)
         if (search.trim()) {
-            query.$text = { $search: search.trim() };
+            const s = search.trim();
+            query.$or = [
+                { title: { $regex: s, $options: 'i' } },
+                { excerpt: { $regex: s, $options: 'i' } },
+                { content: { $regex: s, $options: 'i' } },
+                { tags: { $regex: s, $options: 'i' } },
+            ];
         }
 
         // Category filter
@@ -71,7 +78,7 @@ router.get('/', async (req, res) => {
                 family: 'Family Law',
                 constitutional: 'Constitutional Rights',
                 employment: 'Employment',
-                criminal: 'Criminal Law'
+                criminal: 'Criminal Law',
             };
             query.category = catMap[category] || category;
         }
@@ -81,9 +88,13 @@ router.get('/', async (req, res) => {
             query.difficulty = difficulty;
         }
 
-        // Curated filter (Legal Library only shows non-AI-generated articles)
+        // Curated filter — Legal Library shows only non-AI-generated articles
+        // Matches docs where isAiGenerated is explicitly false OR field doesn't exist
         if (req.query.curated === 'true') {
-            query.isAiGenerated = { $ne: true };
+            query.$and = query.$and || [];
+            query.$and.push({
+                $or: [{ isAiGenerated: false }, { isAiGenerated: { $exists: false } }]
+            });
         }
 
         // Sort
