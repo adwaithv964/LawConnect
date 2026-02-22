@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import {
   logActivity,
   getArticles,
-  syncArticles,
   getArticleStats,
   getTrendingArticles,
   getRecentlyViewed,
@@ -44,6 +43,8 @@ const CATEGORIES = [
   { id: 'cyber', name: 'Cyber Crimes', icon: 'Shield' },
   { id: 'family', name: 'Family Law', icon: 'Users' },
   { id: 'constitutional', name: 'Constitutional Rights', icon: 'Scale' },
+  { id: 'criminal', name: 'Criminal Law (BNS/BNSS)', icon: 'Gavel' },
+  { id: 'employment', name: 'Employment Law', icon: 'Briefcase' },
 ];
 
 function timeAgoLabel(date) {
@@ -101,7 +102,6 @@ const LegalLibrary = () => {
   const [aiSuggestions, setAiSuggestions] = useState([]);
   const [isAiSearching, setIsAiSearching] = useState(false);
   const [aiSearchIntent, setAiSearchIntent] = useState('');
-  const [isSyncingNews, setIsSyncingNews] = useState(false);
 
   // ── Loading / error ───────────────────────────────────────────────────────
   const [isLoading, setIsLoading] = useState(true);
@@ -111,23 +111,7 @@ const LegalLibrary = () => {
   const searchDebounce = useRef(null);
   const aiDebounce = useRef(null);
 
-  // ── Sync News ────────────────────────────────────────────────────────────
-  const handleSyncNews = async () => {
-    setIsSyncingNews(true);
-    setError(null);
-    try {
-      const res = await syncArticles();
-      if (res.count > 0) {
-        fetchArticles({ append: false, pageNum: 1 });
-      } else {
-        setError('No new articles found right now.');
-      }
-    } catch (err) {
-      setError('Failed to sync new articles.');
-    } finally {
-      setIsSyncingNews(false);
-    }
-  };
+
 
   // ── Fetch articles ───────────────────────────────────────────────────────
   const fetchArticles = useCallback(async (opts = {}) => {
@@ -320,26 +304,14 @@ const LegalLibrary = () => {
                 </p>
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-3">
-                {/* Sync News Button */}
-                <button
-                  onClick={handleSyncNews}
-                  disabled={isSyncingNews}
-                  className="flex-shrink-0 flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-card border border-border text-foreground hover:bg-muted transition-smooth font-semibold text-sm disabled:opacity-50"
-                >
-                  <Icon name={isSyncingNews ? "Loader" : "RefreshCw"} size={18} className={isSyncingNews ? "animate-spin" : ""} color="currentColor" />
-                  {isSyncingNews ? 'Syncing...' : 'Sync Latest News'}
-                </button>
-
-                {/* AI Ask Button — prominent CTA */}
-                <button
-                  onClick={() => setIsResearchPanelOpen(true)}
-                  className="flex-shrink-0 flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-primary to-primary/80 text-primary-foreground shadow-lg hover:shadow-xl hover:from-primary/90 hover:to-primary/70 transition-smooth font-semibold text-sm"
-                >
-                  <Icon name="Scale" size={18} color="currentColor" />
-                  Legal Research AI
-                </button>
-              </div>
+              {/* AI Ask Button — prominent CTA */}
+              <button
+                onClick={() => setIsResearchPanelOpen(true)}
+                className="flex-shrink-0 flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-primary to-primary/80 text-primary-foreground shadow-lg hover:shadow-xl hover:from-primary/90 hover:to-primary/70 transition-smooth font-semibold text-sm"
+              >
+                <Icon name="Scale" size={18} color="currentColor" />
+                Legal Research AI
+              </button>
             </div>
 
             {/* Stats bar */}

@@ -5,6 +5,7 @@ import ProfileSettings from './components/ProfileSettings';
 import NotificationSettings from './components/NotificationSettings';
 import PrivacySettings from './components/PrivacySettings';
 import HelpSupportSettings from './components/HelpSupportSettings';
+import LanguageSettings from './components/LanguageSettings';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import Icon from '../../components/AppIcon';
@@ -27,6 +28,7 @@ const SettingsPage = () => {
         { id: 'profile', label: 'Profile', icon: 'User' },
         { id: 'notifications', label: 'Notifications', icon: 'Bell' },
         { id: 'privacy', label: 'Privacy', icon: 'Shield' },
+        { id: 'language', label: 'Language', icon: 'Globe' },
         { id: 'help', label: 'Help & Support', icon: 'HelpCircle' }
     ];
 
@@ -38,6 +40,8 @@ const SettingsPage = () => {
                 return <NotificationSettings />;
             case 'privacy':
                 return <PrivacySettings />;
+            case 'language':
+                return <LanguageSettings />;
             case 'help':
                 return <HelpSupportSettings />;
             default:

@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import Icon from '../AppIcon';
+import { useLanguage } from '../../context/LanguageContext';
 
 const Header = () => {
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { lang, setLang, languages } = useLanguage();
+  const [langOpen, setLangOpen] = useState(false);
 
   const navigationItems = [
     {
@@ -33,9 +36,19 @@ const Header = () => {
       icon: 'Newspaper'
     },
     {
+      label: 'Current Affairs',
+      path: '/current-affairs',
+      icon: 'Globe'
+    },
+    {
       label: 'Documents',
       path: '/document-vault',
       icon: 'Lock'
+    },
+    {
+      label: 'Evidence Locker',
+      path: '/evidence-locker',
+      icon: 'ShieldCheck'
     },
     {
       label: 'Document Templates',
@@ -51,6 +64,21 @@ const Header = () => {
       label: 'Settings',
       path: '/settings',
       icon: 'Settings'
+    },
+    {
+      label: 'Lawyer Directory',
+      path: '/lawyer-directory',
+      icon: 'Users'
+    },
+    {
+      label: 'Case Status',
+      path: '/case-status-tracker',
+      icon: 'Search'
+    },
+    {
+      label: 'Legal Calendar',
+      path: '/legal-calendar',
+      icon: 'CalendarDays'
     }
   ];
 
@@ -96,6 +124,33 @@ const Header = () => {
               </Link>
             ))}
           </nav>
+
+          {/* Language Switcher */}
+          <div className="hidden lg:flex items-center relative">
+            <button
+              onClick={() => setLangOpen(!langOpen)}
+              className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-xs font-medium border border-border hover:bg-muted transition-smooth"
+            >
+              <Icon name="Globe" size={14} />
+              <span>{lang.toUpperCase()}</span>
+              <Icon name="ChevronDown" size={12} />
+            </button>
+            {langOpen && (
+              <div className="absolute right-0 top-full mt-1 bg-card border border-border rounded-lg shadow-lg z-50 overflow-hidden min-w-[140px]">
+                {languages.map(l => (
+                  <button
+                    key={l.code}
+                    onClick={() => { setLang(l.code); setLangOpen(false); }}
+                    className={`w-full flex items-center gap-2 px-3 py-2.5 text-sm hover:bg-muted transition-colors ${lang === l.code ? 'text-primary font-semibold' : 'text-foreground'
+                      }`}
+                  >
+                    <span>{l.flag}</span>
+                    <span>{l.nativeLabel}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
 
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}

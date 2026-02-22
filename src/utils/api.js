@@ -134,14 +134,35 @@ export const toggleArticleBookmark = (articleId) =>
     });
 
 // ─── Legal News ────────────────────────────────────────────────────────────────
-export const getNewsItems = (category = 'all', limit = 20) =>
+export const getNewsItems = (category = 'all', limit = 24) =>
     request(`/news?category=${category}&limit=${limit}`);
+
+// ─── Current Affairs ──────────────────────────────────────────────────────────
+export const getCurrentAffairs = (category = 'all', limit = 24) =>
+    request(`/news/current-affairs?category=${category}&limit=${limit}`);
 
 export const likeArticle = (articleId) =>
     request(`/articles/${articleId}/like`, {
         method: 'POST',
         body: JSON.stringify({ firebaseUid: getUid() }),
     });
+
+// ─── Evidence Locker ──────────────────────────────────────────────────────────
+export const getEvidenceList = (uid = getUid()) =>
+    request(`/evidence?firebaseUid=${uid}`);
+
+export const uploadEvidence = (formData) =>
+    fetch(`${API_BASE}/evidence/upload`, { method: 'POST', body: formData })
+        .then(r => r.ok ? r.json() : r.json().then(e => Promise.reject(new Error(e.message))));
+
+export const downloadEvidence = (id, uid = getUid()) =>
+    `${API_BASE}/evidence/${id}/download?firebaseUid=${uid}`;
+
+export const verifyEvidence = (id, uid = getUid()) =>
+    request(`/evidence/${id}/verify?firebaseUid=${uid}`);
+
+export const deleteEvidence = (id, uid = getUid()) =>
+    request(`/evidence/${id}?firebaseUid=${uid}`, { method: 'DELETE' });
 
 // ─── AI ──────────────────────────────────────────────────────────────────
 export const askLegalQuestion = (question, articles = []) =>
@@ -196,3 +217,48 @@ export const generateActionPlan = (problemDescription, category) =>
         method: 'POST',
         body: JSON.stringify({ problemDescription, category }),
     });
+
+// ─── Lawyer Directory ─────────────────────────────────────────────────────────
+export const getLawyers = ({ search = '', specialization = 'all', language = 'all', location = 'all', page = 1, limit = 12 } = {}) =>
+    request(`/lawyers?search=${encodeURIComponent(search)}&specialization=${encodeURIComponent(specialization)}&language=${encodeURIComponent(language)}&location=${encodeURIComponent(location)}&page=${page}&limit=${limit}`);
+
+export const getLawyerFilters = () =>
+    request('/lawyers/filters');
+
+// ─── Case Status Tracker ──────────────────────────────────────────────────────
+export const lookupCaseStatus = ({ caseNumber, court, year }) =>
+    request('/case-tracker/lookup', {
+        method: 'POST',
+        body: JSON.stringify({ caseNumber, court, year }),
+    });
+
+export const getCaseTrackerPortals = () =>
+    request('/case-tracker/portals');
+
+// ─── Legal Calendar (localStorage-backed) ────────────────────────────────────
+const CALENDAR_KEY = () => `lc_calendar_${getUid() || 'guest'}`;
+
+export function getCalendarEvents() {
+    try {
+        return JSON.parse(localStorage.getItem(CALENDAR_KEY()) || '[]');
+    } catch { return []; }
+}
+
+export function saveCalendarEvent(event) {
+    const events = getCalendarEvents();
+    if (event.id) {
+        const idx = events.findIndex(e => e.id === event.id);
+        if (idx >= 0) events[idx] = event;
+        else events.push(event);
+    } else {
+        events.push({ ...event, id: `evt_${Date.now()}` });
+    }
+    localStorage.setItem(CALENDAR_KEY(), JSON.stringify(events));
+    return events;
+}
+
+export function deleteCalendarEvent(id) {
+    const events = getCalendarEvents().filter(e => e.id !== id);
+    localStorage.setItem(CALENDAR_KEY(), JSON.stringify(events));
+    return events;
+}

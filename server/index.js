@@ -3,6 +3,7 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const connectDB = require('./db');
 const seedArticles = require('./seeds/seedArticles');
+const { seedLawyers } = require('./routes/lawyerRoutes');
 
 const initCronJobs = require('./cron');
 
@@ -11,6 +12,7 @@ dotenv.config({ path: '../.env' }); // Looking for .env in root
 
 connectDB().then(() => {
     seedArticles();
+    seedLawyers();
     initCronJobs();
 });
 const app = express();
@@ -30,7 +32,10 @@ app.use('/api/activities', require('./routes/activityRoutes'));
 app.use('/api/dashboard', require('./routes/dashboardRoutes'));
 app.use('/api/articles', require('./routes/articleRoutes'));
 app.use('/api/news', require('./routes/newsRoutes'));
+app.use('/api/evidence', require('./routes/evidenceRoutes'));
 app.use('/api/ai', require('./routes/aiRoutes'));
+app.use('/api/lawyers', require('./routes/lawyerRoutes').router);
+app.use('/api/case-tracker', require('./routes/caseTrackerRoutes'));
 
 const PORT = process.env.PORT || 5000;
 

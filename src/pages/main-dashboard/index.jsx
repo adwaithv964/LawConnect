@@ -116,6 +116,33 @@ const MainDashboard = () => {
         ? `Last read ${timeAgo(featureStats.library.lastUsed)}`
         : 'Not visited yet',
       variant: 'default'
+    },
+    {
+      title: 'Lawyer Directory',
+      description: 'Find verified lawyers by specialization, experience, language spoken, and location. Completely non-commercial — no paid promotions.',
+      icon: 'Users',
+      path: '/lawyer-directory',
+      stats: '15+ verified lawyers',
+      recentActivity: 'Browse the directory',
+      variant: 'default'
+    },
+    {
+      title: 'Case Status Tracker',
+      description: 'Track your case status on eCourts and SCDRC portals. Enter your case number to get updates and links to official court portals.',
+      icon: 'Search',
+      path: '/case-status-tracker',
+      stats: 'eCourts · SCDRC · NCDRC',
+      recentActivity: 'Check case status',
+      variant: 'default'
+    },
+    {
+      title: 'Legal Calendar',
+      description: 'Set court hearing reminders, document renewal alerts, and track important legal deadlines and law-related dates.',
+      icon: 'CalendarDays',
+      path: '/legal-calendar',
+      stats: 'Reminders & hearings',
+      recentActivity: 'Manage your calendar',
+      variant: 'default'
     }
   ];
 
