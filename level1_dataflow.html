@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LawConnect Data Flow Diagram - Level 1</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f9fbff;
+            color: #333333;
+            margin: 0;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 32px;
+            margin-bottom: 40px;
+            text-align: center;
+            border-bottom: 3px solid #0056b3;
+            padding-bottom: 15px;
+            width: 100%;
+            max-width: 1300px;
+            color: #002244;
+        }
+
+        .section-header {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: left;
+            width: 100%;
+            max-width: 1300px;
+            margin-top: 30px;
+            margin-bottom: 20px;
+            color: #004080;
+        }
+
+        .diagram-wrapper {
+            width: 100%;
+            max-width: 1300px;
+            display: flex;
+            justify-content: center;
+            background-color: #ffffff;
+            border: 1px solid #cce0ff;
+            border-radius: 12px;
+            padding: 40px;
+            margin-bottom: 50px;
+            box-shadow: 0 8px 25px rgba(0, 86, 179, 0.08);
+            /* slight blue tint shadow */
+        }
+
+        .edgeLabel {
+            background-color: #ffffff !important;
+            font-size: 13px !important;
+            padding: 4px 8px !important;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>LawConnect - Level 1 Data Flow Diagram</h1>
+
+    <!-- Level 1.1: Admin -->
+    <div class="section-header">LEVEL 1.1: ADMIN</div>
+    <div class="diagram-wrapper">
+        <pre class="mermaid">
+        flowchart LR
+            %% Styling Elements
+            classDef entity fill:#ffffff,stroke:#002244,stroke-width:2px,rx:8px,ry:8px,font-size:16px,font-weight:bold,color:#002244
+            classDef process fill:#e6f2ff,stroke:#0056b3,stroke-width:2px,rx:20px,ry:20px,font-size:14px,color:#000000
+            classDef dataStore fill:#ffffff,stroke:#004080,stroke-width:2px,font-size:14px,color:#000000
+            
+            %% External Entity
+            Admin["Admin"]:::entity
+            
+            %% Processes (Ovals)
+            P1(["1.1 Authenticate & Login"]):::process
+            P2(["1.2 Manage Users & Lawyers"]):::process
+            P3(["1.3 Moderate Articles & News"]):::process
+            P4(["1.4 Monitor App Analytics"]):::process
+            P5(["1.5 Audit Gamification System"]):::process
+            P6(["1.6 System Configuration"]):::process
+            
+            %% Data Stores
+            D1[("D1: Auth Credentials")]:::dataStore
+            D2[("D2: User Directory")]:::dataStore
+            D3[("D3: Published Content")]:::dataStore
+            D4[("D4: Dashboard Logs")]:::dataStore
+            D5[("D5: Activity/XP DB")]:::dataStore
+            D6[("D6: System Settings")]:::dataStore
+
+            %% Admin Interactions (Left to Middle)
+            Admin -->|"Submit Credentials"| P1
+            Admin -->|"Manage Profiles/Roles"| P2
+            Admin -->|"Review/Edit Content"| P3
+            Admin -->|"Request Analytics"| P4
+            Admin -->|"Adjust XP Parameters"| P5
+            Admin -->|"Update Config"| P6
+
+            %% Retrieve info back to Admin
+            P1 -->|"Login Token"| Admin
+            P2 -->|"User Status List"| Admin
+            P3 -->|"Content Metrics"| Admin
+            P4 -->|"Visualized Dashboards"| Admin
+            P5 -->|"XP Logs & Limits"| Admin
+            P6 -->|"Config Status"| Admin
+
+            %% Process <--> Database Interactions (Middle to Right)
+            P1 <-->|"Verify Hash/Token"| D1
+            P2 <-->|"CRUD Users/Lawyers"| D2
+            P3 <-->|"Update/Delete Posts"| D3
+            P4 <-->|"Fetch Access Logs"| D4
+            P5 <-->|"Override XP Data"| D5
+            P6 <-->|"Apply Settings"| D6
+        </pre>
+    </div>
+
+    <!-- Level 1.2: Client / User -->
+    <div class="section-header">LEVEL 1.2: CLIENT / USER</div>
+    <div class="diagram-wrapper">
+        <pre class="mermaid">
+        flowchart LR
+            %% Styling Elements
+            classDef entity fill:#ffffff,stroke:#002244,stroke-width:2px,rx:8px,ry:8px,font-size:16px,font-weight:bold,color:#002244
+            classDef process fill:#e6f2ff,stroke:#0056b3,stroke-width:2px,rx:20px,ry:20px,font-size:14px,color:#000000
+            classDef dataStore fill:#ffffff,stroke:#004080,stroke-width:2px,font-size:14px,color:#000000
+            
+            %% External Entity
+            Client["Client / User"]:::entity
+            
+            %% Processes (Ovals)
+            P1(["2.1 Register & Authenticate"]):::process
+            P2(["2.2 Access Gamification/XP"]):::process
+            P3(["2.3 Track Case Status"]):::process
+            P4(["2.4 Manage Encrypted Vault"]):::process
+            P5(["2.5 Consult AI Assistants"]):::process
+            P6(["2.6 Read Articles & News"]):::process
+            P7(["2.7 Search & Book Lawyer"]):::process
+            P8(["2.8 Submit Evidence Locker"]):::process
+            
+            %% Data Stores
+            D1[("D1: User Auth DB")]:::dataStore
+            D2[("D2: Gamification DB")]:::dataStore
+            D3[("D3: Case Tracker DB")]:::dataStore
+            D4[("D4: Document Vault DB")]:::dataStore
+            D5[("D5: AI Prompts & Logs")]:::dataStore
+            D6[("D6: Legal Knowledge Base")]:::dataStore
+            D7[("D7: Lawyer Directory DB")]:::dataStore
+            D8[("D8: AES-Encrypted Evidence DB")]:::dataStore
+
+            %% Client Interactions (Left to Middle)
+            Client -->|"Sign In/Up"| P1
+            Client -->|"View Streaks/XP"| P2
+            Client -->|"Query Case Updates"| P3
+            Client -->|"Upload/Access Files"| P4
+            Client -->|"Chat/Take Quiz"| P5
+            Client -->|"Browse Law News"| P6
+            Client -->|"Search Criteria"| P7
+            Client -->|"Upload AES-256 File"| P8
+
+            %% Retrieve info back to Client
+            P1 -->|"Session Token"| Client
+            P2 -->|"Current Level & XP"| Client
+            P3 -->|"Case Milestones"| Client
+            P4 -->|"Decrypted Documents"| Client
+            P5 -->|"AI Summaries & Roadmaps"| Client
+            P6 -->|"Published Articles"| Client
+            P7 -->|"Matched Lawyers List"| Client
+            P8 -->|"Secured Hash ID"| Client
+
+            %% Process <--> Database Interactions (Middle to Right)
+            P1 <-->|"Store/Check JWT"| D1
+            P2 <-->|"Log Activity/XP"| D2
+            P3 <-->|"Fetch/Update Cases"| D3
+            P4 <-->|"Store/Fetch Metadata"| D4
+            P5 <-->|"Log AI Tokens & Memory"| D5
+            P6 <-->|"Query Legal Posts"| D6
+            P7 <-->|"Filter Lawyer Data"| D7
+            P8 <-->|"Store GCM Tag & IV"| D8
+        </pre>
+    </div>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                curve: 'basis', // Smooth, flowing curves 
+                nodeSpacing: 70,  // Tighter vertical spacing
+                rankSpacing: 220  // Wider horizontal spacing (mimicking given diagram)
+            }
+        });
+    </script>
+
+</body>
+
+</html>

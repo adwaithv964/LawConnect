@@ -1,0 +1,1444 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LawConnect Project Report</title>
+    <style>
+        body {
+            font-family: "Times New Roman", Times, serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        .page {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 20mm;
+            margin: 10mm auto;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
+            page-break-after: always;
+            position: relative;
+        }
+
+        @media print {
+            body {
+                background: none;
+            }
+
+            .page {
+                margin: 0;
+                box-shadow: none;
+                border: none;
+                page-break-after: always;
+            }
+
+            .no-print {
+                display: none;
+            }
+        }
+
+        h1,
+        h2,
+        h3,
+        h4 {
+            color: #2c3e50;
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 28pt;
+            margin-top: 100px;
+            text-transform: uppercase;
+        }
+
+        h2 {
+            font-size: 18pt;
+            margin-top: 40px;
+            border-bottom: 2px solid #2c3e50;
+            padding-bottom: 5px;
+        }
+
+        h3 {
+            font-size: 14pt;
+            margin-top: 25px;
+        }
+
+        .cover-page {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 100%;
+        }
+
+        .cover-title {
+            font-size: 36pt;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #1a252f;
+            text-transform: uppercase;
+        }
+
+        .cover-subtitle {
+            font-size: 18pt;
+            margin-bottom: 100px;
+            color: #555;
+        }
+
+        .cover-details {
+            font-size: 14pt;
+            line-height: 2;
+            margin-top: auto;
+            margin-bottom: 50px;
+        }
+
+        .toc {
+            font-size: 12pt;
+        }
+
+        .toc-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .toc-item span.dots {
+            flex-grow: 1;
+            border-bottom: 1px dotted #000;
+            margin: 0 10px;
+            position: relative;
+            top: -5px;
+        }
+
+        .content-section {
+            font-size: 12pt;
+            text-align: justify;
+            text-justify: inter-word;
+        }
+
+        .content-section p {
+            margin-bottom: 15px;
+            text-indent: 50px;
+        }
+
+        .diagram-placeholder {
+            width: 100%;
+            height: 400px;
+            background-color: #eee;
+            border: 2px dashed #aaa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 30px 0;
+            color: #777;
+            font-weight: bold;
+            font-family: Arial;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+            font-size: 11pt;
+        }
+
+        th {
+            background-color: #2c3e50;
+            color: white;
+        }
+
+        ul,
+        ol {
+            margin-left: 30px;
+            margin-bottom: 20px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- COVER PAGE (Page 1) -->
+    <div class="page cover-page">
+        <div style="margin-top: 50px;">
+            <div class="cover-subtitle">A Project Report On</div>
+            <div class="cover-title">LawConnect</div>
+            <div class="cover-subtitle">Next-Generation Legal Technology Platform</div>
+        </div>
+        <div class="cover-details">
+            <p><strong>Submitted By:</strong></p>
+            <p>[Your Name / Team Name]</p>
+            <br><br>
+            <p><strong>Under the Guidance of:</strong></p>
+            <p>[Guide Name]</p>
+            <br><br>
+            <p><strong>[Your University / Institution Name]</strong></p>
+            <p><strong>[Academic Year]</strong></p>
+        </div>
+    </div>
+
+    <!-- TABLE OF CONTENTS (Page 2 & 3) -->
+    <div class="page">
+        <h2>TABLE OF CONTENTS</h2>
+        <div class="toc">
+            <div class="toc-item"><b>1. INTRODUCTION</b><span class="dots"></span><b>01</b></div>
+            <div class="toc-item" style="padding-left:20px;">1.1 PURPOSE<span class="dots"></span>01</div>
+            <div class="toc-item" style="padding-left:20px;">1.2 SCOPE<span class="dots"></span>02</div>
+
+            <div class="toc-item"><b>2. SYSTEM STUDY AND ANALYSIS</b><span class="dots"></span><b>04</b></div>
+            <div class="toc-item" style="padding-left:20px;">2.1 PRELIMINARY INVESTIGATION<span class="dots"></span>04
+            </div>
+            <div class="toc-item" style="padding-left:20px;">2.2 EXISTING SYSTEM<span class="dots"></span>05</div>
+            <div class="toc-item" style="padding-left:20px;">2.3 PROPOSED SYSTEM<span class="dots"></span>06</div>
+            <div class="toc-item" style="padding-left:40px;">2.3.1 ADVANTAGE OF PROPOSED SYSTEM<span
+                    class="dots"></span>07</div>
+            <div class="toc-item" style="padding-left:20px;">2.4 MODULE DESCRIPTION<span class="dots"></span>08</div>
+            <div class="toc-item" style="padding-left:20px;">2.5 FEASIBILITY STUDY<span class="dots"></span>10</div>
+            <div class="toc-item" style="padding-left:40px;">2.5.1 TECHNICAL FEASIBILITY<span class="dots"></span>10
+            </div>
+            <div class="toc-item" style="padding-left:40px;">2.5.2 OPERATIONAL FEASIBILITY<span class="dots"></span>11
+            </div>
+            <div class="toc-item" style="padding-left:40px;">2.5.3 ECONOMIC FEASIBILITY<span class="dots"></span>11
+            </div>
+            <div class="toc-item" style="padding-left:40px;">2.5.4 BEHAVIOURAL FEASIBILITY<span class="dots"></span>12
+            </div>
+            <div class="toc-item" style="padding-left:40px;">2.5.5 LEGAL FEASIBILITY<span class="dots"></span>12</div>
+            <div class="toc-item" style="padding-left:40px;">2.5.6 SCHEDULE FEASIBILITY<span class="dots"></span>13
+            </div>
+
+            <div class="toc-item"><b>3. SYSTEM REQUIREMENT SPECIFICATION</b><span class="dots"></span><b>14</b></div>
+            <div class="toc-item" style="padding-left:20px;">3.1 SOFTWARE SPECIFICATION<span class="dots"></span>14
+            </div>
+            <div class="toc-item" style="padding-left:20px;">3.2 HARDWARE SPECIFICATION<span class="dots"></span>15
+            </div>
+            <div class="toc-item" style="padding-left:20px;">3.3 SOFTWARE TOOL USED<span class="dots"></span>16</div>
+
+            <div class="toc-item"><b>4. SYSTEM DESIGN</b><span class="dots"></span><b>18</b></div>
+            <div class="toc-item" style="padding-left:20px;">4.1 DATA FLOW DIAGRAM<span class="dots"></span>18</div>
+            <div class="toc-item" style="padding-left:20px;">4.2 ENTITY RELATIONSHIP DIAGRAM<span class="dots"></span>22
+            </div>
+            <div class="toc-item" style="padding-left:20px;">4.3 SEQUENCE DIAGRAM<span class="dots"></span>24</div>
+            <div class="toc-item" style="padding-left:20px;">4.4 USECASE DIAGRAM<span class="dots"></span>26</div>
+            <div class="toc-item" style="padding-left:20px;">4.5 DATABASE DESIGN<span class="dots"></span>28</div>
+            <div class="toc-item" style="padding-left:20px;">4.6 TABLE DESIGN<span class="dots"></span>29</div>
+            <div class="toc-item" style="padding-left:20px;">4.7 USER INTERFACE DESIGN<span class="dots"></span>35</div>
+            <div class="toc-item" style="padding-left:20px;">4.8 INPUT DESIGN<span class="dots"></span>38</div>
+            <div class="toc-item" style="padding-left:20px;">4.9 OUTPUT DESIGN<span class="dots"></span>39</div>
+
+            <div class="toc-item"><b>5. SYSTEM DEVELOPMENT</b><span class="dots"></span><b>41</b></div>
+            <div class="toc-item" style="padding-left:20px;">5.1 CODING ENVIRONMENT<span class="dots"></span>41</div>
+            <div class="toc-item" style="padding-left:20px;">5.2 DEVELOPMENT APPROACH<span class="dots"></span>42</div>
+            <div class="toc-item" style="padding-left:20px;">5.3 DATABASE SERVERS<span class="dots"></span>44</div>
+            <div class="toc-item" style="padding-left:20px;">5.4 PROGRAMMING LANGUAGES<span class="dots"></span>45</div>
+
+            <div class="toc-item"><b>6. SYSTEM TESTING</b><span class="dots"></span><b>47</b></div>
+            <div class="toc-item" style="padding-left:20px;">6.1 WHITE-BOX TESTING<span class="dots"></span>47</div>
+            <div class="toc-item" style="padding-left:20px;">6.2 BLACK-BOX TESTING<span class="dots"></span>48</div>
+            <div class="toc-item" style="padding-left:20px;">6.3 CONDITION TESTING<span class="dots"></span>48</div>
+            <div class="toc-item" style="padding-left:20px;">6.4 LOOP TESTING<span class="dots"></span>49</div>
+            <div class="toc-item" style="padding-left:20px;">6.5 UNIT TESTING<span class="dots"></span>49</div>
+            <div class="toc-item" style="padding-left:20px;">6.6 INTEGRATION TESTING<span class="dots"></span>50</div>
+            <div class="toc-item" style="padding-left:20px;">6.7 OUTPUT TESTING<span class="dots"></span>51</div>
+            <div class="toc-item" style="padding-left:20px;">6.8 USER ACCEPTANCE TESTING<span class="dots"></span>51
+            </div>
+
+            <div class="toc-item"><b>7. SYSTEM IMPLEMENTATION</b><span class="dots"></span><b>52</b></div>
+            <div class="toc-item" style="padding-left:20px;">7.1 IMPLEMENTATION PLAN<span class="dots"></span>52</div>
+            <div class="toc-item" style="padding-left:20px;">7.2 EDUCATION AND TRAINING<span class="dots"></span>53
+            </div>
+            <div class="toc-item" style="padding-left:20px;">7.3 TRAINING OF THE APPLICATION SOFTWARE<span
+                    class="dots"></span>53</div>
+            <div class="toc-item" style="padding-left:20px;">7.4 POST IMPLEMENTATION REVIEW<span class="dots"></span>54
+            </div>
+            <div class="toc-item" style="padding-left:20px;">7.5 SECURITY<span class="dots"></span>54</div>
+            <div class="toc-item" style="padding-left:20px;">7.6 MAINTENANCE<span class="dots"></span>55</div>
+
+            <div class="toc-item"><b>8. FUTURE ENHANCEMENT</b><span class="dots"></span><b>56</b></div>
+            <div class="toc-item"><b>9. CONCLUSION</b><span class="dots"></span><b>58</b></div>
+            <div class="toc-item"><b>10. APPENDIX A: SOURCE CODE</b><span class="dots"></span><b>60</b></div>
+            <div class="toc-item" style="padding-left:20px;">10.1 WEB<span class="dots"></span>60</div>
+            <div class="toc-item" style="padding-left:20px;">10.2 ANDROID<span class="dots"></span>68</div>
+            <div class="toc-item"><b>11. APPENDIX B: SCREENSHOTS</b><span class="dots"></span><b>72</b></div>
+            <div class="toc-item" style="padding-left:20px;">11.1 WEB<span class="dots"></span>72</div>
+            <div class="toc-item" style="padding-left:20px;">11.2 ANDROID<span class="dots"></span>78</div>
+            <div class="toc-item"><b>12. BIBLIOGRAPHY</b><span class="dots"></span><b>81</b></div>
+        </div>
+    </div>
+
+    <!-- 1. INTRODUCTION -->
+    <div class="page content-section">
+        <h2>1. INTRODUCTION</h2>
+        <p>In the modern age of digital transformation, the legal industry has traditionally lagged behind, relying
+            heavily on manual paperwork, physical documentation storage, and fragmented communication channels between
+            clients, lawyers, and legal institutions. <strong>LawConnect</strong> emerges as a pioneering solution
+            designed to bridge this technological gap. It is a comprehensive, cloud-based platform intended to
+            modernize, streamline, and secure the daily operations of legal professionals while democratizing legal
+            access for everyday citizens.</p>
+        <p>The platform inherently addresses the fundamental issues in case management, document verification via
+            cryptography, seamless appointment scheduling, and the integration of artificial intelligence for rapid
+            legal research. By unifying these dispersed aspects of law into a single, cohesive ecosystem, LawConnect
+            redefines the standard for digital legal workspaces.</p>
+
+        <h3>1.1 PURPOSE</h3>
+        <p>The primary purpose of the LawConnect project is to develop an integrated digital infrastructure that
+            facilitates transparent, efficient, and secure interactions within the legal domain. Historically, obtaining
+            legal counsel, securely storing tamper-proof evidence, and tracking case progressions have been cumbersome
+            processes fraught with delays and the risk of document misplacement or forgery.</p>
+        <p>LawConnect aims to eliminate these bottlenecks by providing a suite of advanced tools tailored for two
+            primary groups: legal practitioners and the general public (clients). For lawyers, it serves as an advanced
+            practice management software equipped with AI capabilities to accelerate case research and a digital vault
+            to handle sensitive client files. For clients, it acts as a transparent portal to find specialized legal
+            help, communicate securely with their appointed counsel, and monitor the real-time status of their legal
+            matters without necessitating constant physical meetings.</p>
+        <p>In essence, the purpose is to replace outdated, manual legal workflows with a robust, automated ecosystem
+            powered by modern web technologies (MERN stack), cloud services (Firebase), and cutting-edge artificial
+            intelligence (Gemini API).</p>
+    </div>
+
+    <div class="page content-section">
+        <h3>1.2 SCOPE</h3>
+        <p>The scope of the LawConnect system is exceptionally broad, encompassing multiple facets of legal task
+            management, client interaction, and secure data handling. The platform is designed as a highly scalable web
+            application with responsive design principles, ensuring accessibility across both desktop and mobile
+            devices. The major functional boundaries of the system include:</p>
+        <ul>
+            <li><strong>User Identity and Role Management:</strong> Secure authentication leveraging Firebase Auth.
+                Distinct user portals and access control privileges for 'Lawyers' and 'Clients' to ensure data privacy
+                and appropriate feature visibility.</li>
+            <li><strong>Digital Document Vault and Evidence Locker:</strong> A highly secure storage mechanism for legal
+                documents and evidence. This scope includes advanced cryptographic features such as AES-256-GCM
+                encryption for data at rest and SHA-256 hashing to verify document integrity, preventing tampering and
+                ensuring admissibility.</li>
+            <li><strong>AI-Powered Legal Research:</strong> Integration with large language models (like Gemini AI)
+                optimized for the Indian legal context. This feature allows practitioners to query legal precedents,
+                summarize extensive case files, and draft preliminary legal responses, thereby drastically reducing
+                research time.</li>
+            <li><strong>Real-time Legal News Feed:</strong> Aggregation and filtering of the latest legal developments
+                and news to keep professionals updated without leaving the platform.</li>
+            <li><strong>Case and Appointment Management:</strong> Comprehensive tools for lawyers to schedule client
+                meetings, track billable hours, map out 'Action Plans' for ongoing cases, and automate reminders through
+                calendar integrations.</li>
+            <li><strong>Security and Compliance Logs:</strong> Maintenance of extensive audit trails (SecurityLogs and
+                ActivityLogs) to track who accessed which document and when, providing full accountability—a critical
+                requirement in the legal sector.</li>
+        </ul>
+        <p>The out-of-scope items for the current iteration include direct financial transactions (e.g., integrated
+            payment gateways for legal fees), real-time video conferencing (external links like Google Meet/Zoom are
+            used instead), and direct digital filing with official court systems (e-Filing APIs are highly restricted by
+            jurisdiction).</p>
+    </div>
+
+    <!-- 2. SYSTEM STUDY AND ANALYSIS -->
+    <div class="page content-section">
+        <h2>2. SYSTEM STUDY AND ANALYSIS</h2>
+
+        <h3>2.1 PRELIMINARY INVESTIGATION</h3>
+        <p>The preliminary investigation phase for LawConnect involved a detailed study of the operational
+            inefficiencies currently plaguing independent lawyers, small-to-medium law firms, and clients seeking legal
+            help. During this phase, extensive literature reviews, surveys among legal practitioners, and analysis of
+            existing software solutions were conducted to formulate the problem statement.</p>
+        <p>The investigation revealed that lawyers spend nearly 40% of their working hours on administrative tasks—such
+            as searching for physical case files, managing disjointed email threads for client communication, and
+            conducting manual legal research through heavy volumes of law journals. Clients expressed immense
+            frustration regarding the lack of transparency in their cases, often being unaware of the next steps or
+            court dates unless explicitly informed via phone calls.</p>
+        <p>Furthermore, the investigation highlighted a critical vulnerability in how evidence and confidential
+            documents are handled digitally. Most lawyers rely on standard cloud storage (like Google Drive or Dropbox)
+            or email attachments, which lack the stringent chain-of-custody tracking, tamper-proofing, and end-to-end
+            encryption required by stringent legal compliance standards.</p>
+    </div>
+
+    <div class="page content-section">
+        <h3>2.2 EXISTING SYSTEM</h3>
+        <p>The existing systems governing the workflow of a vast majority of legal professionals are fundamentally
+            fragmented and archaic. Currently, operations are handled through a disconnected patchwork of
+            general-purpose software:</p>
+        <ul>
+            <li><strong>Documentation:</strong> Physical filing cabinets or desktop folders, leading to hours lost in
+                retrieval and high risk of physical damage or data loss.</li>
+            <li><strong>Communication:</strong> Standard email clients and consumer messaging apps (like WhatsApp) which
+                do not guarantee legal-grade confidentiality or structured record keeping.</li>
+            <li><strong>Research:</strong> Expensive, offline legal encyclopedias or basic internet searches that are
+                time-consuming and lack contextual AI assistance.</li>
+            <li><strong>Evidence Handling:</strong> Physical submission of digital media (USB drives) or unencrypted
+                cloud sharing, making the verification of non-tampering (chain of custody) nearly impossible to prove in
+                a digital court setting.</li>
+        </ul>
+        <p><strong>Drawbacks of the Existing System:</strong></p>
+        <ul>
+            <li>Highly prone to human error and data loss.</li>
+            <li>Lack of a centralized dashboard leads to poor time management and missed deadlines.</li>
+            <li>Absence of cryptographic safeguards for sensitive client data.</li>
+            <li>Clients experience an opaque process, reducing trust in their legal representation.</li>
+            <li>No tools to quickly summarize large volumes of unstructured case texts.</li>
+        </ul>
+
+        <h3>2.3 PROPOSED SYSTEM</h3>
+        <p>The proposed system, LawConnect, replaces the fragmented legacy approach with a unified, cloud-based platform
+            specifically engineered for the legal vertical. Built upon the MERN stack (MongoDB, Express.js, React.js,
+            Node.js), it centralizes all aspects of legal practice into highly interactive and secure modules.</p>
+        <p>The system introduces Role-Based Access Control (RBAC) upon login. A lawyer logging in is greeted by a
+            comprehensive dashboard displaying their complete active case roster, upcoming appointments, and priority
+            notifications. A client dashboard provides a simplified view focusing on their specific cases, status
+            updates, and secure messaging portals with their counsel.</p>
+        <p>A cornerstone of the proposed system is the "Digital Evidence Locker," which fundamentally upgrades document
+            storage. It applies AES-256-GCM encryption before data hits the database and generates immutable SHA-256
+            hashes to guarantee data integrity. Additionally, the integration of Gemini AI transforms legal research by
+            allowing lawyers to interact conversationally with a specialized legal knowledge base.</p>
+    </div>
+
+    <div class="page content-section">
+        <h4>2.3.1 ADVANTAGE OF PROPOSED SYSTEM</h4>
+        <p>The introduction of LawConnect brings numerous operational, security, and financial benefits compared to
+            traditional methodologies:</p>
+        <ul>
+            <li><strong>Unprecedented Security:</strong> By utilizing enterprise-level encryption algorithms, client
+                data and evidentiary documents are immune to unauthorized tampering, ensuring strict compliance with
+                attorney-client privilege.</li>
+            <li><strong>Operational Efficiency:</strong> Automated scheduling, centralized document vaults, and
+                AI-assisted legal drafting significantly reduce the time spent on administrative overhead, allowing
+                lawyers to handle more cases effectively.</li>
+            <li><strong>Enhanced Client Transparency:</strong> Clients gain 24/7 access to their case progress via the
+                portal, reducing the need for constant status-update phone calls and thereby improving the lawyer-client
+                relationship.</li>
+            <li><strong>Cost Effectiveness:</strong> Eliminates the need for physical storage spaces, legacy software
+                licenses, and reduces courier costs for document sharing.</li>
+            <li><strong>Scalability:</strong> Cloud-native architecture ensures that the system can grow seamlessly from
+                a solo practitioner to a large firm without any underlying infrastructure changes.</li>
+        </ul>
+
+        <h3>2.4 MODULE DESCRIPTION</h3>
+        <p>The LawConnect application is architecturally designed around several independently scalable, yet highly
+            interconnected modules:</p>
+        <ol>
+            <li><strong>Authentication & Authorization Module:</strong> This module manages user registration, login,
+                session management, and role assignment. Utilizing Firebase Authentication, it supports secure,
+                token-based (JWT) access. It differentiates between Admin, Lawyer, and Client roles, restricting backend
+                API access and frontend route rendering based on these roles.</li>
+
+            <li><strong>User Profile & Directory Module:</strong> Allows users to maintain detailed profiles. For
+                lawyers, this includes their specialization, years of experience, bar council registration details, and
+                successful case history. This database acts as a searchable directory for clients seeking specific legal
+                expertise.</li>
+
+            <li><strong>Document Vault & Case Management Module:</strong> The core operational module. It enables the
+                creation of 'Cases' and links multiple 'Documents' to specific cases. It handles secure file uploading
+                (using Multer in the backend), categorization (e.g., Contracts, Affidavits, Petitions), and version
+                control.</li>
+
+            <li><strong>Digital Evidence Locker Module:</strong> A highly specialized sub-module of the Vault. It
+                processes sensitive files through cryptographic hashing (SHA-256) to create a 'digital fingerprint' and
+                encrypts the payload (AES-256). It includes a dedicated interface to verify the integrity of an evidence
+                file at any point in time.</li>
+
+            <li><strong>AI Legal Assistant Module:</strong> This module integrates external AI APIs (Gemini) to provide
+                intelligent features: summarizing 100-page judgments into bullet points, drafting preliminary legal
+                notices based on contextual prompts, and answering specific queries about Indian Penal Code or
+                Constitution.</li>
+
+            <li><strong>Legal Action Plan & Scheduler Module:</strong> Allows lawyers to construct a chronological
+                flowchart of legal steps for a specific case type. It integrates with digital calendars to set
+                deadlines, send SMS/Email reminders for court hearings, and export complete timelines as PDF reports for
+                clients.</li>
+        </ol>
+    </div><!-- Continue 2. SYSTEM STUDY AND ANALYSIS -->
+<div class="page content-section">
+    <h3>2.5 FEASIBILITY STUDY</h3>
+    <p>A feasibility study is a rigorous analysis of a proposed project to determine its viability, technical
+        feasibility, financial implications, and overall probability of success. Before committing extensive resources
+        to the development of LawConnect, a multi-dimensional feasibility study was conducted. The study aims to
+        objectively and rationally uncover the strengths and weaknesses of the proposed LawConnect system, opportunities
+        and threats as presented by the environment, the resources required to carry through, and ultimately the
+        prospects for success.</p>
+
+    <h4>2.5.1 TECHNICAL FEASIBILITY</h4>
+    <p>This assessment focuses on the technical resources available to the organization. It helps organizations evaluate
+        whether the technical resources meet capacity and whether the technical team is capable of converting the ideas
+        into a working software system.</p>
+    <ul>
+        <li><strong>Infrastructure:</strong> The system is designed to be hosted on Vercel (Frontend) and Render/Heroku
+            (Backend), relying entirely on cloud infrastructure. This eliminates the need for on-premise hardware
+            installation. Technically, cloud platforms guarantee 99.9% uptime and auto-scaling, making this highly
+            feasible.</li>
+        <li><strong>Technology Stack:</strong> The chosen MERN stack (MongoDB, Express, React, Node.js) is
+            industry-standard for building high-performance, single-page applications (SPAs). It handles heavy I/O
+            operations (like document uploads) exceptionally well through Node's non-blocking architecture. React
+            ensures a fluid user interface without full-page reloads.</li>
+        <li><strong>Integrations:</strong> The integration of external APIs, specifically Google Gemini for AI
+            functionalities and Firebase for Identity Access Management (IAM), is well-documented and supported by
+            robust SDKs. The technical risk here is minimal as these are stable, widely-adopted technologies.</li>
+        <li><strong>Security Implementations:</strong> The cryptographic requirements (AES-256 for encryption and
+            SHA-256 for hashing) are natively supported by Node.js built-in `crypto` module, removing the necessity to
+            build custom, error-prone cryptographic libraries from scratch.</li>
+    </ul>
+    <p><strong>Conclusion:</strong> Technically, the project is highly feasible. The selected tech stack perfectly
+        aligns with the project requirements, and development complexities are well within the capabilities of modern
+        full-stack methodologies.</p>
+</div>
+
+<div class="page content-section">
+    <h4>2.5.2 OPERATIONAL FEASIBILITY</h4>
+    <p>Operational feasibility assesses the extent to which the proposed system solves the problems identified during
+        the preliminary investigation and whether it will be successfully adopted by the intended users—lawyers and
+        clients.</p>
+    <ul>
+        <li><strong>User Interface (UI):</strong> The application employs a modern, intuitive, and accessible UI,
+            heavily influenced by Material Design guidelines and Tailwind CSS structuring. By keeping the interface
+            clean and providing tooltips/onboarding flows, the learning curve for non-tech-savvy lawyers or older
+            clients is significantly reduced.</li>
+        <li><strong>Workflow Alignment:</strong> LawConnect does not attempt to change the fundamental way law is
+            practiced; rather, it digitizes and accelerates existing workflows. For example, "Action Plans" mimic the
+            physical checklists lawyers already use, meaning the system matches their cognitive model of work.</li>
+        <li><strong>Accessibility:</strong> Being a Progressive Web App (PWA) accessible via any standard browser
+            (Chrome, Safari, Edge) on desktop or mobile, users do not need to install heavy desktop software or manage
+            updates, lowering the barrier to entry.</li>
+    </ul>
+    <p><strong>Conclusion:</strong> Operationally, the system is highly feasible as it directly addresses current pain
+        points (lost documents, communication delays) while mapping closely to existing professional workflows.</p>
+
+    <h4>2.5.3 ECONOMIC FEASIBILITY</h4>
+    <p>Economic feasibility evaluates the cost-benefit ratio of the proposed system. It involves estimating the total
+        cost of development and deployment against the financial benefits it will generate.</p>
+    <ul>
+        <li><strong>Development Costs:</strong> Utilizing open-source technologies (React, Node.js, MongoDB Community
+            Edition) drastically reduces licensing fees to zero. The primary costs are developer time and third-party
+            API usage.</li>
+        <li><strong>Hosting and Maintenance Costs:</strong> Cloud hosting (Vercel/Render) offers generous free tiers for
+            development. Production costs scale linearly with usage. MongoDB Atlas provides a scalable database as a
+            service, reducing Database Administrator (DBA) staffing requirements.</li>
+        <li><strong>Financial Benefits:</strong> Time saved on administrative tasks translates directly to increased
+            billable hours for lawyers. For clients, it reduces associated costs of travel and document courier
+            services. The platform could also introduce subscription tiers for premium features (e.g., unlimited AI
+            queries).</li>
+    </ul>
+    <p><strong>Conclusion:</strong> Economically, the project presents a very favorable ROI (Return on Investment). The
+        low capital expenditure (CapEx) required to build serverless cloud applications makes the financial risk minimal
+        while the value proposition is high.</p>
+</div>
+
+<div class="page content-section">
+    <h4>2.5.4 BEHAVIOURAL FEASIBILITY</h4>
+    <p>This dimension examines the readiness of the target users to adopt the new system and abandon legacy practices.
+        The legal profession is notoriously conservative regarding technology adoption, often citing concerns over data
+        privacy.</p>
+    <ul>
+        <li><strong>Mitigating Resistance:</strong> To overcome resistance, LawConnect emphasizes its security features
+            upfront. The implementation of the 'Evidence Locker' with demonstrable cryptographic guarantees directly
+            addresses the core fear of data tampering.</li>
+        <li><strong>Training Requirements:</strong> The interface is designed to be self-explanatory. However, a
+            comprehensive set of digital walkthroughs and a Help Center will be provided within the app. The system
+            requires minimal formal training sessions.</li>
+    </ul>
+    <p><strong>Conclusion:</strong> While some resistance from older practitioners is expected, the clear efficiency
+        gains and security assurances make the behavioral adoption highly probable, especially among younger,
+        tech-native law firms.</p>
+
+    <h4>2.5.5 LEGAL FEASIBILITY</h4>
+    <p>Legal feasibility determines whether the proposed system conflicts with legal requirements or ethical guidelines,
+        which is particularly critical for a 'LegalTech' platform.</p>
+    <ul>
+        <li><strong>Data Protection (DPDPA / GDPR):</strong> The system is architected to comply with standard data
+            protection regulations. The use of Firebase ensures secure user data management. MongoDB Atlas clusters can
+            be deployed in specific geographic regions (e.g., India) to comply with data localization laws.</li>
+        <li><strong>Attorney-Client Privilege:</strong> The end-to-end encryption strategy for the Evidence Locker
+            ensures that even database administrators cannot read sensitive case files, thereby maintaining strict
+            attorney-client confidentiality.</li>
+    </ul>
+    <p><strong>Conclusion:</strong> The system is designed with legal compliance as a foundational pillar, making it
+        legally feasible and compliant with industry standards.</p>
+
+    <h4>2.5.6 SCHEDULE FEASIBILITY</h4>
+    <p>Schedule feasibility is a measure of how reasonable the project timetable is. Given the modular nature of the
+        MERN stack, parallel development (frontend and backend simultaneously) allows for an aggressive yet realistic
+        timeline. Utilizing Agile methodologies, MVPs (Minimum Viable Products) for core features like IAM and Vault can
+        be released rapidly.</p>
+    <p><strong>Conclusion:</strong> With proper sprint planning and utilizing existing libraries (like React
+        components), the project can be comprehensively delivered within standard academic or corporate development
+        cycles (e.g., 3-6 months).</p>
+</div>
+
+<!-- 3. SYSTEM REQUIREMENT SPECIFICATION -->
+<div class="page content-section">
+    <h2>3. SYSTEM REQUIREMENT SPECIFICATION</h2>
+    <p>A System Requirements Specification (SRS) serves as the foundation for the entire project. It lays out the
+        functional and non-functional requirements, acting as an agreement between the developers and the stakeholders.
+        It explicitly defines what the software will do and how it will be expected to perform under various conditions.
+    </p>
+
+    <h3>3.1 SOFTWARE SPECIFICATION</h3>
+    <p>The software requirements delineate the logical characteristics of the system, including the operating
+        environments, databases, libraries, and external services required to develop, deploy, and run the LawConnect
+        application.</p>
+
+    <p><strong>Frontend Requirements:</strong></p>
+    <ul>
+        <li><strong>Framework:</strong> React.js (v18.x) - For building the interactive User Interface.</li>
+        <li><strong>Build Tool:</strong> Vite - For rapid development server and optimized production bundles.</li>
+        <li><strong>Styling:</strong> Tailwind CSS (v3.x) - For utility-first rapid UI styling and responsiveness.</li>
+        <li><strong>State Management:</strong> Context API and custom Hooks - For managing global states like user
+            authentication status.</li>
+        <li><strong>Routing:</strong> React Router DOM (v6) - For seamless client-side navigation.</li>
+        <li><strong>Icons:</strong> Lucide React / React Icons - For SVG iconography.</li>
+    </ul>
+
+    <p><strong>Backend Requirements:</strong></p>
+    <ul>
+        <li><strong>Environment:</strong> Node.js (v18+ LTS) - As the runtime environment.</li>
+        <li><strong>Framework:</strong> Express.js (v4.x) - To build the RESTful API architecture.</li>
+        <li><strong>Authentication:</strong> Firebase Admin SDK - To verify JWT tokens from the frontend.</li>
+        <li><strong>File Uploads:</strong> Multer - Middleware for handling `multipart/form-data` (document uploads).
+        </li>
+        <li><strong>Cryptography:</strong> native Node.js `crypto` module (AES-256-GCM, SHA-256).</li>
+        <li><strong>AI Integration:</strong> `@google/genai` (Gemini SDK) - For natural language processing tasks.</li>
+        <li><strong>Parsing:</strong> `pdf-parse` - To extract text from uploaded legal PDFs for AI summarization.</li>
+    </ul>
+
+    <p><strong>Database Requirements:</strong></p>
+    <ul>
+        <li><strong>Database:</strong> MongoDB (v6+) - A NoSQL document database, ideal for handling unstructured legal
+            data and flexible schemas.</li>
+        <li><strong>ODM:</strong> Mongoose - Object Data Modeling library to enforce schemas and relationships between
+            Users, Cases, and Documents within MongoDB.</li>
+    </ul>
+</div>
+
+<div class="page content-section">
+    <h3>3.2 HARDWARE SPECIFICATION</h3>
+    <p>Since LawConnect is a web-based, cloud-hosted platform, the hardware requirements are divided between the
+        Development Environment (what the developers need) and the Client Environment (what the end-user needs to run
+        the app).</p>
+
+    <p><strong>Development Environment (Minimum Recommended):</strong></p>
+    <ul>
+        <li><strong>Processor:</strong> Intel Core i5 (8th Gen) / AMD Ryzen 5 or equivalent Apple Silicon (M1).</li>
+        <li><strong>RAM:</strong> 8 GB (16 GB highly recommended for running local MongoDB, Node server, and React dev
+            server concurrently without bottlenecking).</li>
+        <li><strong>Storage:</strong> 256 GB SSD (Solid State Drive crucial for fast `npm install` and hot-reloading).
+        </li>
+        <li><strong>Operating System:</strong> Windows 10/11, macOS 11+, or standard Linux Distro (Ubuntu 20.04+).</li>
+    </ul>
+
+    <p><strong>Client Environment (End-User Requirements):</strong></p>
+    <ul>
+        <li><strong>Device:</strong> Any device capable of running a modern web browser (PC, Laptop, Tablet,
+            Smartphone).</li>
+        <li><strong>Processor:</strong> Minimum 1.5 GHz Dual-Core (for rendering heavy DOM elements in dashboards).</li>
+        <li><strong>RAM:</strong> 2 GB minimum (4 GB recommended for smooth experience with multiple documents).</li>
+        <li><strong>Browser Support:</strong> Google Chrome (v90+), Mozilla Firefox (v88+), Apple Safari (v14+),
+            Microsoft Edge (v90+). The browser MUST support Web Crypto API and modern ES6 JavaScript.</li>
+        <li><strong>Internet Connection:</strong> Stable broadband connection (Minimum 2 Mbps for standard usage, 10
+            Mbps for rapid upload/download of large PDF evidence files).</li>
+    </ul>
+
+    <h3>3.3 SOFTWARE TOOL USED</h3>
+    <p>A variety of developer tools and platforms were utilized to architect, design, build, and deploy the system
+        efficiently.</p>
+    <ul>
+        <li><strong>IDE (Integrated Development Environment):</strong> Visual Studio Code (VS Code). Selected for its
+            extensive extension ecosystem (Prettier, ESLint, Tailwind CSS IntelliSense) and excellent Git integration.
+        </li>
+        <li><strong>Version Control:</strong> Git & GitHub. Used for source code management, branching strategies, and
+            collaborative development.</li>
+        <li><strong>API Testing:</strong> Postman / ThunderClient. Utilized during the backend development phase to mock
+            requests and test API endpoints independently of the frontend UI.</li>
+        <li><strong>Design Tool:</strong> Figma. Used for rapid prototyping, translating wireframes into high-fidelity
+            UI designs, and determining the color palette and typography before coding.</li>
+        <li><strong>Database GUI:</strong> MongoDB Compass. Used to visually explore the database, run ad-hoc queries,
+            and manage indexes without relying solely on the CLI.</li>
+        <li><strong>Package Manager:</strong> npm (Node Package Manager) / yarn. Essential for managing thousands of
+            project dependencies.</li>
+    </ul>
+</div>
+
+<!-- 4. SYSTEM DESIGN -->
+<div class="page content-section">
+    <h2>4. SYSTEM DESIGN</h2>
+    <p>System Design is a critical transition phase from conceptual requirements to technical implementation. It defines
+        the architecture, modules, interfaces, and data for a system to satisfy specified requirements. In LawConnect,
+        the design phase utilized standard modeling languages and diagrams to map out how data moves through the
+        application, how entities relate in the database, and how users interact with the interface.</p>
+
+    <h3>4.1 DATA FLOW DIAGRAM</h3>
+    <p>A Data Flow Diagram (DFD) maps out the flow of information for any process or system. It uses defined symbols
+        like rectangles, circles, and arrows to show data inputs, outputs, storage points, and the routes between each
+        destination.</p>
+
+    <p><strong>Level 0 DFD (Context Diagram):</strong></p>
+    <p>The Level 0 DFD provides a high-level overview of the entire LawConnect ecosystem. It shows the system as a
+        single process interacting with external entities (Lawyer, Client, Admin) and external APIs (Firebase, Gemini).
+        <br>
+        <i>(See visual representation below)</i>
+    </p>
+
+    <div class="diagram-placeholder" style="height: 300px;">
+        [ L E V E L 0 D F D P L A C E H O L D E R ]<br>
+        Showing: Lawyer/Client -> LawConnect Core System -> Firebase/MongoDB
+    </div>
+
+    <p><strong>Level 1 DFD:</strong></p>
+    <p>The Level 1 DFD breaks down the main system into its major sub-processes: Authentication, Case Management,
+        Document Vault (Evidence), and AI Assistant.</p>
+
+    <div class="diagram-placeholder" style="height: 400px;">
+        [ L E V E L 1 D F D P L A C E H O L D E R ]<br>
+        Showing separate processes: Auth Service, Vault Service, AI Service, Database
+    </div>
+
+    <p><strong>Level 2 DFD (Evidence Locker Focus):</strong></p>
+    <p>This details the specific internal workings of uploading secure evidence. It outlines the data path from user
+        upload, passing through the backend Crypto Module (AES encryption + SHA hash generation), and finally storing
+        the encrypted buffer in MongoDB and the hash in the Metadata Collection.</p>
+</div><!-- Continue 4. SYSTEM DESIGN -->
+<div class="page content-section">
+    <h3>4.2 ENTITY RELATIONSHIP DIAGRAM</h3>
+    <p>An Entity Relationship Diagram (ERD) visually represents the architecture of the database, illustrating how
+        entities such as people, objects, or concepts relate to each other within the system. LawConnect's database is a
+        non-relational document structure (MongoDB), but ERDs are still critical for establishing Mongoose Schema
+        references.</p>
+
+    <p><strong>Entities:</strong></p>
+    <ul>
+        <li><strong>User:</strong> The central entity representing a person accessing the system. Contains attributes
+            like `uid`, `email`, `role` (Admin/Lawyer/Client), and `displayName`.</li>
+        <li><strong>Case:</strong> Represents a legal matter. Connects one Lawyer to one or more Clients. Contains
+            `title`, `description`, `status`, and `courtType`.</li>
+        <li><strong>Document:</strong> Represents a standard uploaded file linked to a specific Case. Contains
+            `filename`, `fileUrl`, `uploadedBy`, and `caseId`.</li>
+        <li><strong>Evidence:</strong> A specialized document entity. Inherits traits of Document but adds
+            `encryptedData`, `iv`, `authTag`, and `fileHash`. Contains a one-to-one relationship with a Document or
+            Case.</li>
+        <li><strong>Appointment:</strong> Represents a scheduled meeting between a Lawyer and a Client. Contains `date`,
+            `time`, `lawyerId`, `clientId`, and `status`.</li>
+        <li><strong>ActionPlan:</strong> Represents a timeline of legal steps. Connects a Case to an Array of step
+            objects (description, expectedDate, completedStatus).</li>
+    </ul>
+
+    <div class="diagram-placeholder" style="height: 450px;">
+        [ E N T I T Y R E L A T I O N S H I P D I A G R A M P L A C E H O L D E R ]<br>
+        Showing: User (1:N) Case (1:N) Document/Evidence, Case (1:1) ActionPlan, User (1:N) Appointment
+    </div>
+</div>
+
+<div class="page content-section">
+    <h3>4.3 SEQUENCE DIAGRAM</h3>
+    <p>A Sequence Diagram details object interactions arranged in a time sequence. It depicts the objects and classes
+        involved in the scenario and the sequence of messages exchanged between the objects needed to carry out the
+        functionality. This is particularly crucial for the asynchronous API calls made in LawConnect.</p>
+
+    <p><strong>Example: Upload Secure Evidence Sequence</strong></p>
+    <ol>
+        <li><strong>Client/Lawyer (Actor)</strong> initiates a file upload via the React Frontend.</li>
+        <li><strong>React Frontend</strong> converts the file to base-64 or FormData and sends an HTTP POST request to
+            `/api/evidence/upload`.</li>
+        <li><strong>Express Backend (authMiddleware)</strong> intercepts the request to verify the Firebase JWT token
+            ensuring the user is authenticated.</li>
+        <li><strong>Backend (Crypto Service)</strong> hashes the file buffer using SHA-256 for integrity verification.
+        </li>
+        <li><strong>Backend (Crypto Service)</strong> encrypts the buffer using AES-256-GCM, generating an
+            `encryptedBuffer`, `iv` (Initialization Vector), and `authTag`.</li>
+        <li><strong>Mongoose Subsystem</strong> creates a new Evidence Document with the metadata and encrypted payload,
+            saving it to MongoDB.</li>
+        <li><strong>MongoDB</strong> returns a success confirmation to the Express Backend.</li>
+        <li><strong>Express Backend</strong> sends a 201 Created HTTP response to the Frontend.</li>
+        <li><strong>React Frontend</strong> updates the UI state to display the newly uploaded secure evidence to the
+            Actor.</li>
+    </ol>
+
+    <div class="diagram-placeholder" style="height: 400px;">
+        [ S E Q U E N C E D I A G R A M P L A C E H O L D E R ]<br>
+        Visual timeline of the Upload Secure Evidence process from Actor to Database and back.
+    </div>
+</div>
+
+<div class="page content-section">
+    <h3>4.4 USECASE DIAGRAM</h3>
+    <p>A Usecase Diagram portrays the different ways a user might interact with the system. It helps identify functional
+        specifications from an end-user perspective.</p>
+
+    <p><strong>Actors:</strong></p>
+    <ul>
+        <li><strong>Unauthenticated User:</strong> Can view the landing page, read public FAQs, register, and login.
+        </li>
+        <li><strong>Client:</strong> Can view assigned cases, upload general documents, securely review evidence via the
+            locker, book appointments with their lawyer, and invoke the AI assistant for basic queries.</li>
+        <li><strong>Lawyer:</strong> Inherits Client actions but can also create new cases, invite clients, generate
+            AI-assisted legal summaries, define case action plans, and access full audit logs.</li>
+        <li><strong>Admin:</strong> (System Level) Manages user roles, resolves technical disputes, and monitors overall
+            system health/activity logs.</li>
+    </ul>
+
+    <div class="diagram-placeholder" style="height: 450px;">
+        [ U S E C A S E D I A G R A M P L A C E H O L D E R ]<br>
+        Showing stick figures (Actors) pointing to oval actions (Use cases).
+    </div>
+</div>
+
+<div class="page content-section">
+    <h3>4.5 DATABASE DESIGN</h3>
+    <p>MongoDB was selected for database implementation due to its flexibility. Legal cases often possess highly
+        unstructured data—a contract might have completely different metadata than a police FIR. A NoSQL schema approach
+        handles this variability gracefully.</p>
+
+    <p><strong>Design Principles Used:</strong></p>
+    <ul>
+        <li><strong>Denormalization vs. Normalization:</strong> While MongoDB encourages denormalization (embedding
+            documents), LawConnect uses referential integrity (similar to traditional foreign keys) for large
+            collections to avoid exceeding the 16MB document size limit. For example, Documents reference Case IDs
+            rather than being embedded within the Case document itself.</li>
+        <li><strong>Indexing:</strong> Heavy emphasis on creating compound indexes on frequently queried fields, such as
+            `uploadedBy` and `caseId` in the Evidence collection, ensuring rapid read operations even as the database
+            scales to millions of records.</li>
+        <li><strong>Security:</strong> All sensitive text fields (like the actual content of an AI-summarized judgment)
+            are subjected to field-level encryption prior to database storage.</li>
+    </ul>
+
+    <h3>4.6 TABLE DESIGN</h3>
+    <p>In the context of MongoDB, "Tables" are referred to as "Collections," and rows are "Documents." The following
+        defines the Data Dictionary mapping out the Mongoose Schemas used in LawConnect.</p>
+
+    <h4>Table (Collection): Users</h4>
+    <table>
+        <tr>
+            <th>Field Name</th>
+            <th>Data Type</th>
+            <th>Description</th>
+            <th>Constraints</th>
+        </tr>
+        <tr>
+            <td>_id</td>
+            <td>ObjectId</td>
+            <td>Primary Key generated by MongoDB</td>
+            <td>Required, Unique</td>
+        </tr>
+        <tr>
+            <td>firebaseUid</td>
+            <td>String</td>
+            <td>Unique identifier provided by Firebase Auth</td>
+            <td>Required, Unique, Indexed</td>
+        </tr>
+        <tr>
+            <td>email</td>
+            <td>String</td>
+            <td>User's registered email address</td>
+            <td>Required, Unique</td>
+        </tr>
+        <tr>
+            <td>role</td>
+            <td>String</td>
+            <td>Determines access level ('admin', 'lawyer', 'client')</td>
+            <td>Required, Enum</td>
+        </tr>
+        <tr>
+            <td>profilePicture</td>
+            <td>String</td>
+            <td>URL linking to the user's avatar</td>
+            <td>Optional</td>
+        </tr>
+    </table>
+</div>
+
+<div class="page content-section">
+    <h4>Table (Collection): Cases</h4>
+    <table>
+        <tr>
+            <th>Field Name</th>
+            <th>Data Type</th>
+            <th>Description</th>
+            <th>Constraints</th>
+        </tr>
+        <tr>
+            <td>_id</td>
+            <td>ObjectId</td>
+            <td>Primary Key</td>
+            <td>Required, Unique</td>
+        </tr>
+        <tr>
+            <td>title</td>
+            <td>String</td>
+            <td>Title or alias of the legal case</td>
+            <td>Required</td>
+        </tr>
+        <tr>
+            <td>lawyerId</td>
+            <td>ObjectId</td>
+            <td>Reference to the assigned Lawyer's User ID</td>
+            <td>Required, Indexed</td>
+        </tr>
+        <tr>
+            <td>clientId</td>
+            <td>ObjectId</td>
+            <td>Reference to the Client's User ID</td>
+            <td>Required, Indexed</td>
+        </tr>
+        <tr>
+            <td>status</td>
+            <td>String</td>
+            <td>Current status ('Open', 'Closed', 'Pending')</td>
+            <td>Required, Default: 'Pending'</td>
+        </tr>
+        <tr>
+            <td>createdAt</td>
+            <td>Date</td>
+            <td>Timestamp of case creation</td>
+            <td>Required, Auto-generated</td>
+        </tr>
+    </table>
+
+    <h4>Table (Collection): Evidence</h4>
+    <table>
+        <tr>
+            <th>Field Name</th>
+            <th>Data Type</th>
+            <th>Description</th>
+            <th>Constraints</th>
+        </tr>
+        <tr>
+            <td>_id</td>
+            <td>ObjectId</td>
+            <td>Primary Key</td>
+            <td>Required, Unique</td>
+        </tr>
+        <tr>
+            <td>title</td>
+            <td>String</td>
+            <td>Descriptive name of the evidence file</td>
+            <td>Required</td>
+        </tr>
+        <tr>
+            <td>encryptedData</td>
+            <td>String</td>
+            <td>The AES-256-GCM encrypted file buffer (Base64)</td>
+            <td>Required</td>
+        </tr>
+        <tr>
+            <td>iv</td>
+            <td>String</td>
+            <td>Initialization Vector required for decryption</td>
+            <td>Required</td>
+        </tr>
+        <tr>
+            <td>authTag</td>
+            <td>String</td>
+            <td>Authentication tag verifying GCM integrity</td>
+            <td>Required</td>
+        </tr>
+        <tr>
+            <td>fileHash</td>
+            <td>String</td>
+            <td>SHA-256 hash of the original unencrypted file</td>
+            <td>Required</td>
+        </tr>
+        <tr>
+            <td>uploadedBy</td>
+            <td>ObjectId</td>
+            <td>Reference to User ID of the uploader</td>
+            <td>Required</td>
+        </tr>
+    </table>
+</div>
+
+<!-- 5. SYSTEM DEVELOPMENT -->
+<div class="page content-section">
+    <h2>5. SYSTEM DEVELOPMENT</h2>
+    <p>The System Development phase translates design specifications into working software code. The focus was on
+        writing clean, modular, and testable code adhering to modern web development standards.</p>
+
+    <h3>5.1 CODING ENVIRONMENT</h3>
+    <p>LawConnect was developed entirely using a full-stack JavaScript environment, ensuring context-switching for
+        developers was minimized as both the client and server utilized the same language syntax.</p>
+    <ul>
+        <li><strong>Frontend Environment:</strong> Constructed using React functional components and hooks (`useState`,
+            `useEffect`). Vite was selected over the traditional Create React App (CRA) due to its vastly superior Hot
+            Module Replacement (HMR) speeds, drastically cutting down development waiting times. Tailwind CSS provided a
+            zero-runtime CSS-in-JS alternative, keeping bundle sizes minimal.</li>
+        <li><strong>Backend Environment:</strong> Implemented as a RESTful API using Node.js and the Express framework.
+            The application strictly follows the Model-View-Controller (MVC) architectural pattern. Routes define the
+            endpoints (`/api/evidence`), Controllers handle the business logic (encryption, validation), and Models
+            interact with the database.</li>
+        <li><strong>Version Control Strategy:</strong> A standard Git-Flow model was adopted. Features were developed on
+            isolated `feature/` branches, reviewed via Pull Requests, logically merged into `develop`, and finally
+            pushed to `main` upon successful automated Vercel deployment checks.</li>
+    </ul>
+
+    <h3>5.2 DEVELOPMENT APPROACH</h3>
+    <p>An Agile iterative approach was employed rather than a traditional, rigid Waterfall model. This allowed for
+        continuous integration of stakeholder feedback, especially regarding the user experience of complex legal AI
+        tools.</p>
+    <p>The development was broken down into two-week 'Sprints':</p>
+    <ul>
+        <li><strong>Sprint 1-2:</strong> Foundation - Authentication, Route Guarding, Database Connections, and Basic
+            CRUD operations for User Profiles.</li>
+        <li><strong>Sprint 3-4:</strong> Core Management - Case generation, Document Vault integration, File uploading
+            middleware, UI construction for Dashboards.</li>
+        <li><strong>Sprint 5-6:</strong> Security & Encryption - Implementing the complex cryptographic logic for the
+            Evidence Locker, building the download/decryption flows, and creating audit logs.</li>
+        <li><strong>Sprint 7-8:</strong> AI & Advanced Features - Integrating the Gemini API, formulating optimal
+            prompts for legal research contexts, building Action Plans, and News Feeds.</li>
+    </ul>
+</div>
+
+<div class="page content-section">
+    <h3>5.3 DATABASE SERVERS</h3>
+    <p>The system leverages MongoDB Atlas as its Database-as-a-Service (DBaaS) provider. Atlas eliminates the
+        operational overhead of managing physical database servers, backups, and scaling.</p>
+    <ul>
+        <li><strong>Cluster Configuration:</strong> Deployed on an M0 (Sandbox) to M10 cluster scale depending on the
+            environment (Dev vs. Prod). The clusters are replica sets providing data redundancy and high availability
+            across multiple availability zones.</li>
+        <li><strong>Network Security:</strong> Database access is strictly controlled via IP Whitelisting (allowing only
+            the dynamic IPs of the production backend servers) and robust Database User Authentication credentials
+            handled via the application `.env` configurations.</li>
+    </ul>
+
+    <h3>5.4 PROGRAMMING LANGUAGES</h3>
+    <p>Due to the choice of the MERN stack, the primary implementation language across the entire application stack is
+        JavaScript (ES6+ standard), enhanced with strict syntactical standards via ESLint and Prettier.</p>
+    <ul>
+        <li><strong>JavaScript (ES6/ESNext):</strong> Utilized heavily for asynchronous programming (`async/await`,
+            Promises), essential for handling non-blocking I/O operations like network requests to Gemini AI and large
+            PDF file parsing without freezing the application UI.</li>
+        <li><strong>HTML5 & CSS3:</strong> Underpins the fundamental structure and styling of the React application,
+            heavily abstracted through Tailwind classes but occasionally leveraged directly for complex animations
+            (`keyframes`) and responsive grids (`CSS Grid/Flexbox`).</li>
+        <li><strong>JSX (JavaScript XML):</strong> Used extensively in the frontend to write HTML-like syntax directly
+            inside JavaScript files, allowing for dynamic rendering of components based on application state (e.g.,
+            conditionally rendering an "Access Denied" screen if the User Role does not permit viewing).</li>
+    </ul>
+</div><!-- Continue 6. SYSTEM TESTING -->
+<div class="page content-section">
+    <h2>6. SYSTEM TESTING</h2>
+    <p>Software testing is an essential activity in the software engineering process. It involves the execution of
+        software components using manual or automated tools to evaluate one or more properties of interest. The purpose
+        of testing LawConnect is to identify errors, gaps, or missing requirements contrary to the actual specifications
+        before deploying to the end-users.</p>
+
+    <h3>6.1 WHITE-BOX TESTING</h3>
+    <p>Also known as clear box testing, this method tests the internal structures or workings of an application. It was
+        primarily performed by developers during the coding phase.</p>
+    <ul>
+        <li><strong>Authentication Flow:</strong> Verified that the backend correctly decodes the Firebase JWT token,
+            extracts the `uid`, and matches it against the database to enforce role-based access. Checked for
+            null-pointer exceptions if a token was invalid or expired.</li>
+        <li><strong>Cryptographic Integrity:</strong> Inspected the code handling the AES-256-GCM encryption. Ensured
+            that the Initialization Vector (`iv`) is uniquely generated `crypto.randomBytes(16)` for every single
+            Evidence file uploaded, preventing cryptographic vulnerabilities associated with IV reuse.</li>
+        <li><strong>API Endpoints:</strong> Examined Express.js routes to ensure middleware correctly blocks
+            unauthorized requests before reaching the controller logic.</li>
+    </ul>
+
+    <h3>6.2 BLACK-BOX TESTING</h3>
+    <p>This testing method examines the functionality of an application without peering into its internal structures or
+        workings. It evaluates the system from the perspective of an end-user.</p>
+    <ul>
+        <li><strong>Login System:</strong> Attempted logins with valid credentials, invalid passwords, non-existent
+            emails, and empty fields. Expected proper error messaging ("User not found", "Password incorrect") without
+            breaking the UI.</li>
+        <li><strong>Role Viewing:</strong> Logged in as a 'Client' and attempted to access the '/lawyer-dashboard' route
+            via URL manipulation. Verified that the system correctly redirects the user back to the unauthorized access
+            page.</li>
+        <li><strong>File Upload limits:</strong> Attempted to upload files exceeding the 10MB limit (configured via
+            Multer) and files with disallowed extensions (e.g., `.exe`). Verified that the system correctly rejects
+            these uploads and warns the user.</li>
+    </ul>
+</div>
+
+<div class="page content-section">
+    <h3>6.3 CONDITION TESTING</h3>
+    <p>Condition testing is a test design method that exercises logical conditions contained in a program module.</p>
+    <p>For example, in the AI Legal Assistant module, there is a condition determining if the document being analyzed is
+        a PDF or plain text. The test verified that if `mimetype === 'application/pdf'`, the system successfully
+        triggers the `pdf-parse` library to extract text before passing the prompt to the Gemini API, whereas plain text
+        skips this step entirely.</p>
+
+    <h3>6.4 LOOP TESTING</h3>
+    <p>Loop testing focuses exclusively on the validity of loop constructs. In LawConnect, loops are heavily used when
+        rendering lists of cases, documents, and action plan steps.</p>
+    <p>Testing involved rendering the 'Active Cases' dashboard with 0, 1, 10, and 100 cases. Verified that the React
+        `map()` function executing the loop correctly handles empty arrays (displaying an "Empty State" graphic) and
+        efficiently renders long lists without severe browser frame-rate drops (identifying needs for pagination if
+        scaling further).</p>
+
+    <h3>6.5 UNIT TESTING</h3>
+    <p>Unit testing involves verifying individual blocks of code functionality.</p>
+    <ul>
+        <li><strong>Password Strength Evaluator:</strong> A utility function that measures password complexity. Tested
+            with arrays of varying strings (e.g., 'password', 'Pass123!', 'P@$$w0rd_Is_H@rd') to ensure it accurately
+            assigns strength scores.</li>
+        <li><strong>Date Formatter:</strong> A utility converting ISO string dates retrieved from MongoDB into
+            human-readable Indian Standard Time formats (`DD/MM/YYYY hh:mm A`). Tested for correct timezone conversion
+            and edge cases like leap years.</li>
+    </ul>
+
+    <h3>6.6 INTEGRATION TESTING</h3>
+    <p>Integration testing is the phase in which individual software modules are combined and tested as a group to
+        expose faults in the interaction between integrated units.</p>
+    <p><strong>Example: Create Case Flow.</strong> This requires the Frontend (React), the Backend (Express API), and
+        the Database (MongoDB) to work together. The test verified that inputting data in the 'New Case Modal' on the
+        frontend successfully creates a matching document in MongoDB via the backend, and that the frontend state
+        updates immediately to show the new case without a page reload.</p>
+
+    <h3>6.7 OUTPUT TESTING</h3>
+    <p>Output testing verified that data generated by the system met the expected format.</p>
+    <p>When exporting an 'Action Plan' as a PDF (using `html2pdf.js`), the testing verified that the generated document
+        accurately reflected the table shown on the screen, included the LawConnect branding, and that the downloaded
+        file was correctly named (e.g., `Action_Plan_CaseName_Date.pdf`) without visual corruption.</p>
+
+    <h3>6.8 USER ACCEPTANCE TESTING</h3>
+    <p>During UAT, actual intended users (a sample group of lawyers and potential clients) tested the software in
+        real-world scenarios. Feedback highlighted minor UI/UX issues, such as the 'Upload Document' button being
+        difficult to locate on mobile devices, which was subsequently rectified by implementing a floating action button
+        (FAB) for smaller viewport widths.</p>
+</div>
+
+<!-- 7. SYSTEM IMPLEMENTATION -->
+<div class="page content-section">
+    <h2>7. SYSTEM IMPLEMENTATION</h2>
+    <p>Implementation is the status of the project where theoretical design is turned into a working system. It involves
+        installing the application, training the users, configuring the environments, and planning for post-deployment
+        monitoring.</p>
+
+    <h3>7.1 IMPLEMENTATION PLAN</h3>
+    <p>A phased deployment strategy was chosen over a 'Big Bang' deployment to mitigate risk.</p>
+    <ol>
+        <li><strong>Phase 1 (Alpha Build):</strong> Deployment of the core IAM and Vault modules strictly to an internal
+            staging environment (Vercel Preview links connected to a Mock Database). Internal team performs rigorous
+            black-box testing.</li>
+        <li><strong>Phase 2 (Beta Build / Soft Launch):</strong> Integration of the AI Module and Evidence Cryptography.
+            Deployment to a select group of independent practitioners (Beta Testers) using secondary 'test' cases (no
+            actual live client data).</li>
+        <li><strong>Phase 3 (Production Launch):</strong> Migration of the backend to the live production server. SSL
+            Certificates explicitly enforced. The platform is officially opened for Lawyer registration.</li>
+    </ol>
+
+    <h3>7.2 EDUCATION AND TRAINING</h3>
+    <p>Since the intended users range significantly in technological literacy, training is an ongoing imperative.</p>
+    <p>For the initial rollout, 'Onboarding Tooltips' were directly integrated into the dashboard, guiding users through
+        their first generic workflows: "How to add a client," "How to upload an evidence file," and "How to prompt the
+        AI."</p>
+
+    <h3>7.3 TRAINING OF THE APPLICATION SOFTWARE</h3>
+    <p>Extensive documentation was generated to assist users. This includes a robust internal "Help Center" containing
+        written articles and short 30-second video snippets demonstrating complex tasks, like exporting compliance logs
+        or verifying a hash tag for a file in the Evidence Locker.</p>
+
+    <h3>7.4 POST IMPLEMENTATION REVIEW</h3>
+    <p>A structured review is scheduled 30 days post-launch. Key performance indicators (KPIs) to be analyzed include:
+    </p>
+    <ul>
+        <li>Application Crash Rate (monitored via Firebase Crashlytics logic).</li>
+        <li>Average time taken to encrypt/upload a file (Performance monitoring).</li>
+        <li>API Error Rates (specifically monitoring the Gemini AI rate limits).</li>
+        <li>User retention and active daily login metrics.</li>
+    </ul>
+
+    <h3>7.5 SECURITY</h3>
+    <p>Security is the paramount concern in the implementation of LawConnect. The digital perimeter relies on several
+        stringent policies:</p>
+    <ul>
+        <li><strong>Data in Transit:</strong> Perfect Forward Secrecy enforced via HTTPS/TLS 1.3 for all client-server
+            communications.</li>
+        <li><strong>Data at Rest:</strong> MongoDB storage is encrypted at rest. Furthermore, the highest-risk data
+            (Evidence) is independently encrypted using AES-256-GCM before database insertion.</li>
+        <li><strong>Access Control:</strong> Strict Role-Based Access Control verified on every single backend API hit
+            via JWT validation.</li>
+        <li><strong>Environment Variables:</strong> Absolute segregation of development, staging, and production
+            secrets. Secrets (`ENCRYPTION_SECRET`, `GEMINI_API_KEY`) are managed strictly through external provider
+            dashboards (Vercel/Render) and never committed to version control.</li>
+    </ul>
+
+    <h3>7.6 MAINTENANCE</h3>
+    <p>System maintenance includes continuous application of security patches for NPM dependencies (via `npm audit
+        fix`). Monitoring the deprecation schedules of external APIs (Firebase SDKs, Gemini API versioning) to ensure
+        backend controllers are updated preventatively, ensuring zero downtime.</p>
+</div>
+
+<!-- 8. FUTURE ENHANCEMENT -->
+<div class="page content-section">
+    <h2>8. FUTURE ENHANCEMENT</h2>
+    <p>While the current iteration of LawConnect provides a foundational modernization for legal practitioners, several
+        advanced features are planned for future versions to further encompass the entire legal ecosystem.</p>
+    <ul>
+        <li><strong>Integrated Payment Gateways:</strong> Integration of an e-commerce layer (e.g., Razorpay/Stripe) to
+            allow clients to pay retainer fees and milestone billing directly through the platform securely.</li>
+        <li><strong>Video Conferencing Integration:</strong> Developing a native WebRTC-based video consultation room,
+            preventing reliance on external software (Zoom/Meet) and automatically storing secure, encrypted
+            transcriptions of client meetings.</li>
+        <li><strong>Automated e-Filing (Jurisdiction Dependent):</strong> As national courts modernize their APIs,
+            LawConnect could potentially allow direct e-Filing of verified documents straight from the Vault to the
+            official court servers.</li>
+        <li><strong>Advanced Analytics Dashboard:</strong> Providing law firm administrators with detailed graphic
+            analytics showing revenue tracking, lawyer win/loss ratios, and AI usage metrics to optimize firm
+            operations.</li>
+        <li><strong>OCR for Handwritten Notes:</strong> Enhancing the Document Module with Optical Character Recognition
+            capable of transcribing historical, handwritten case files and making them fully searchable by the AI.</li>
+    </ul>
+</div>
+
+<!-- 9. CONCLUSION -->
+<div class="page content-section">
+    <h2>9. CONCLUSION</h2>
+    <p>The development of <strong>LawConnect</strong> encapsulates a significant step toward digitizing an industry
+        heavily burdened by procedural bureaucracy and physical documentation. By leveraging the robustness of the MERN
+        stack alongside state-of-the-art cryptographic techniques and artificial intelligence, the platform proves that
+        maintaining strict legal compliance (data integrity, confidentiality) does not need to come at the expense of
+        user experience and operational efficiency.</p>
+    <p>Throughout the system study, design, and implementation phases discussed in this report, careful consideration
+        was given to the unique pain points of legal professionals and their clients. The resulting application not only
+        serves as a secure central repository for sensitive files but effectively acts as a digital co-counsel through
+        its AI integrations.</p>
+    <p>Ultimately, LawConnect successfully achieves its primary objective: empowering lawyers to spend less time on
+        administrative constraints and more time on legal argumentation, while simultaneously providing clients with
+        unprecedented transparency and trust in their legal representation.</p>
+</div><!-- 10. APPENDIX A: SOURCE CODE -->
+<div class="page content-section">
+    <h2>10. APPENDIX A: SOURCE CODE</h2>
+    <p>This section provides critical snippets of the source code that power the primary functionalities of the
+        LawConnect platform.</p>
+
+    <h3>10.1 WEB</h3>
+    <p>The following are excerpts from the React JS Frontend and Express JS Backend.</p>
+
+    <p><strong>React Context Provider: Accessing Auth State</strong></p>
+    <pre style="background:#282c34; color:#abb2bf; padding:15px; border-radius:5px; font-size:10pt; overflow-x:auto;">
+<code>
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '../firebaseConfig';
+import axios from 'axios';
+
+const AuthContext = createContext();
+
+export const AuthProvider = ({ children }) => {
+    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+            if (firebaseUser) {
+                const token = await firebaseUser.getIdToken();
+                // Fetch role-specific user details from backend DB
+                const res = await axios.get('/api/users/me', {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                setUser({ ...firebaseUser, ...res.data.user });
+            } else {
+                setUser(null);
+            }
+            setLoading(false);
+        });
+        return unsubscribe;
+    }, []);
+
+    return (
+        &lt;AuthContext.Provider value={{ user, loading }}&gt;
+            {!loading && children}
+        &lt;/AuthContext.Provider&gt;
+    );
+};
+
+export const useAuth = () => useContext(AuthContext);
+</code>
+</pre>
+
+    <p><strong>Express Controller: Encrypting & Uploading Evidence (Backend)</strong></p>
+    <pre style="background:#282c34; color:#abb2bf; padding:15px; border-radius:5px; font-size:10pt; overflow-x:auto;">
+<code>
+const crypto = require('crypto');
+const Evidence = require('../models/Evidence');
+
+exports.uploadSecureEvidence = async (req, res) => {
+    try {
+        const fileBuffer = req.file.buffer;
+        
+        // 1. Generate SHA-256 Hash for Integrity Checking
+        const hashPattern = crypto.createHash('sha256');
+        hashPattern.update(fileBuffer);
+        const fileHash = hashPattern.digest('hex');
+
+        // 2. Encrypt File Buffer using AES-256-GCM
+        const iv = crypto.randomBytes(16);
+        const secretKey = Buffer.from(process.env.ENCRYPTION_SECRET, 'hex');
+        const cipher = crypto.createCipheriv('aes-256-gcm', secretKey, iv);
+        
+        const encryptedBuffer = Buffer.concat([cipher.update(fileBuffer), cipher.final()]);
+        const authTag = cipher.getAuthTag();
+
+        // 3. Save purely encrypted data to MongoDB
+        const newEvidence = new Evidence({
+            title: req.body.title,
+            caseId: req.body.caseId,
+            uploadedBy: req.user._id,
+            encryptedData: encryptedBuffer.toString('base64'),
+            iv: iv.toString('hex'),
+            authTag: authTag.toString('hex'),
+            fileHash: fileHash
+        });
+
+        await newEvidence.save();
+        res.status(201).json({ message: "Evidence secured and uploaded." });
+
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+</code>
+</pre>
+</div>
+
+<!-- 11. APPENDIX B: SCREENSHOTS -->
+<div class="page content-section">
+    <h3>10.2 ANDROID</h3>
+    <p>The LawConnect application is structured as a Progressive Web Application (PWA) using Vite's PWA plugin. This
+        explicitly negates the requirement for a separate Native Java/Kotlin codebase, as the web responsive PWA
+        installs natively on Android Devices via a WebAPK directly from the browser window.</p>
+
+    <pre style="background:#282c34; color:#abb2bf; padding:15px; border-radius:5px; font-size:10pt; overflow-x:auto;">
+<code>
+// vite.config.js (PWA Manifest configuration for Android installation)
+import { VitePWA } from 'vite-plugin-pwa';
+
+export default {
+  plugins: [
+    VitePWA({
+      registerType: 'autoUpdate',
+      manifest: {
+        name: 'LawConnect',
+        short_name: 'LawConnect',
+        description: 'Next-Generation Legal Technology Platform',
+        theme_color: '#004d40',
+        background_color: '#ffffff',
+        display: 'standalone',
+        icons: [
+          {
+            src: 'img/icons/android-chrome-192x192.png',
+            sizes: '192x192',
+            type: 'image/png'
+          },
+          {
+            src: 'img/icons/android-chrome-512x512.png',
+            sizes: '512x512',
+            type: 'image/png'
+          }
+        ]
+      }
+    })
+  ]
+}
+</code>
+</pre>
+
+    <h2>11. APPENDIX B: SCREENSHOTS</h2>
+    <p>This section provides visual representations of the deployed graphical user interfaces (GUI) for the LawConnect
+        Application across varying viewports (Desktop Web and Mobile Android).</p>
+
+    <h3>11.1 WEB</h3>
+    <p><strong>Figure 1: LawConnect Main Landing Page (Unauthenticated)</strong></p>
+    <div class="diagram-placeholder" style="height: 350px;">
+        [ S c r e e n s h o t : L a n d i n g P a g e ]
+    </div>
+
+    <p><strong>Figure 2: Lawyer Dashboard (Active Cases Overview)</strong></p>
+    <div class="diagram-placeholder" style="height: 350px;">
+        [ S c r e e n s h o t : L a w y e r D a s h b o a r d ]
+    </div>
+
+    <p><strong>Figure 3: Secure Evidence Locker Interface</strong></p>
+    <div class="diagram-placeholder" style="height: 350px;">
+        [ S c r e e n s h o t : E v i d e n c e L o c k e r ]
+    </div>
+</div>
+
+<div class="page content-section">
+    <h3>11.2 ANDROID</h3>
+    <p>As a PWA, these screenshots represent the mobile-responsive views as they appear when 'Installed' on an Android
+        device home screen, stripping away browser search bars for native feel.</p>
+
+    <p><strong>Figure 4: Mobile Client Portal (Case Status View)</strong></p>
+    <div class="diagram-placeholder" style="height: 400px; width: 60%; margin: 20px auto;">
+        [ S c r e e n s h o t : M o b i l e C l i e n t V i e w ]
+    </div>
+
+    <p><strong>Figure 5: Mobile AI Legal Assistant Chat Interface</strong></p>
+    <div class="diagram-placeholder" style="height: 400px; width: 60%; margin: 20px auto;">
+        [ S c r e e n s h o t : M o b i l e A I A s s i s t a n t ]
+    </div>
+</div>
+
+<!-- 12. BIBLIOGRAPHY -->
+<div class="page content-section">
+    <h2>12. BIBLIOGRAPHY</h2>
+    <p>The following references, official documentations, libraries, and publications were consulted during the
+        research, design, and development phases of the LawConnect system.</p>
+
+    <ol>
+        <li><strong>MERN Stack Official Documentations:</strong>
+            <ul>
+                <li>MongoDB Inc. (2024). <i>MongoDB Documentation</i>. Retrieved from <a
+                        href="https://docs.mongodb.com/">https://docs.mongodb.com/</a></li>
+                <li>OpenJS Foundation. (2024). <i>Express Node.js Web Application Framework</i>. Retrieved from <a
+                        href="https://expressjs.com/">https://expressjs.com/</a></li>
+                <li>Meta Platforms, Inc. (2024). <i>React – A JavaScript library for building user interfaces</i>.
+                    Retrieved from <a href="https://react.dev/">https://react.dev/</a></li>
+                <li>OpenJS Foundation. (2024). <i>Node.js Documentation</i>. Retrieved from <a
+                        href="https://nodejs.org/en/docs/">https://nodejs.org/en/docs/</a></li>
+            </ul>
+        </li>
+        <br>
+        <li><strong>Cryptography and Security Implementation:</strong>
+            <ul>
+                <li>NIST. (2001). <i>Advanced Encryption Standard (AES)</i>. FIPS PUB 197. Federal Information
+                    Processing Standards Publication.</li>
+                <li>NIST. (2015). <i>Secure Hash Standard (SHS)</i>. FIPS PUB 180-4. Provides foundational understanding
+                    of SHA-256 hashing.</li>
+                <li>Node.js API Reference. (v18.x). <i>Crypto module (Authentication tags for AES-GCM)</i>.</li>
+            </ul>
+        </li>
+        <br>
+        <li><strong>Artificial Intelligence Integrations:</strong>
+            <ul>
+                <li>Google DeepMind. (2024). <i>Gemini API Reference</i>. Retrieved from `<a
+                        href="https://ai.google.dev/">https://ai.google.dev/</a>`. Used for implementing generative
+                    texts and summarization models for the Indian Penal Code context.</li>
+            </ul>
+        </li>
+        <br>
+        <li><strong>Identity & Deployment Infrastructure:</strong>
+            <ul>
+                <li>Google LLC. (2024). <i>Firebase Authentication Documentation</i>. Guide to implementing JWT, session
+                    handling, and OAuth2.0 tokens.</li>
+                <li>Vercel Inc. (2024). <i>Vercel Deployment Workflows</i>. Documentation for frontend serverless
+                    hosting.</li>
+            </ul>
+        </li>
+        <br>
+        <li><strong>UI/UX Design Frameworks:</strong>
+            <ul>
+                <li>Tailwind Labs Inc. (2024). <i>Tailwind CSS Documentation</i>. Principles of utility-first CSS and
+                    responsive grids.</li>
+                <li>Google. (2024). <i>Material Design Guidelines (M3)</i>. Baseline heuristics for accessible
+                    application layout design.</li>
+            </ul>
+        </li>
+    </ol>
+</div>
+</body>
+
+</html>

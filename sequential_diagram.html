@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LawConnect Sequential Diagram</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f7f9fa;
+            color: #333333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            text-align: center;
+            border-bottom: 3px solid #0056b3;
+            padding-bottom: 10px;
+            width: 100%;
+            max-width: 1600px;
+        }
+
+        .diagram-wrapper {
+            width: 100%;
+            max-width: 1600px;
+            display: flex;
+            justify-content: center;
+            background-color: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            overflow-x: auto;
+        }
+
+        /* Customize mermaid edges text and rect headers if possible */
+        .messageText {
+            fill: #000 !important;
+            font-size: 13px !important;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>LawConnect System Architecture - Sequence Diagram</h1>
+
+    <div class="diagram-wrapper">
+        <pre class="mermaid">
+        sequenceDiagram
+            autonumber
+            
+            %% Define Participants
+            actor Client as Client/User
+            actor Admin as Admin
+            participant Frontend as React Frontend
+            participant API as Express/Node Backend
+            participant DB as MongoDB (Mongoose)
+            participant Auth as Firebase Auth
+            participant Gemini as Google Gemini AI
+
+            %% SECTION 1: USER REGISTRATION & AUTHENTICATION
+            rect rgb(235, 240, 245)
+            note over Client, Gemini: 1. USER AUTHENTICATION & ONBOARDING
+            Client->>Frontend: Enter Email/Password
+            Frontend->>Auth: register/login(email, password)
+            Auth-->>Frontend: Return ID Token (JWT)
+            Frontend->>API: POST /api/user/sync (headers: Authorization: Bearer token)
+            API->>Auth: Verify Token Signature
+            Auth-->>API: Token Valid (uid, email)
+            API->>DB: Upsert User Document (firebaseUid, email)
+            DB-->>API: User Data Saved
+            API-->>Frontend: 200 OK (User Profile)
+            Frontend-->>Client: Redirect to User Dashboard
+            end
+            
+            %% SECTION 2: DIGITAL EVIDENCE LOCKER
+            rect rgb(245, 235, 240)
+            note over Client, Gemini: 2. SECURE EVIDENCE UPLOAD (AES-256-GCM)
+            Client->>Frontend: Upload Sensitive Evidence File
+            Frontend->>API: POST /api/evidence/upload (FormData)
+            API->>API: Generate SHA-256 Hash of original file
+            API->>API: Encrypt File using AES-256-GCM (User ID & Secret Key)
+            API->>API: Extract Initialization Vector (IV) & Auth Tag
+            API->>DB: Insert Evidence (encryptedData, iv, authTag, sha256Hash)
+            DB-->>API: 201 Created
+            API-->>Frontend: Return Evidence Details (No raw data)
+            Frontend-->>Client: Display "Evidence Secured & Encrypted"
+            end
+
+            %% SECTION 3: CASE MANAGEMENT
+            rect rgb(235, 245, 235)
+            note over Client, Gemini: 3. CASE TRACKING & MANAGEMENT
+            Client->>Frontend: Create New legal Case
+            Frontend->>API: POST /api/cases (title, category)
+            API->>DB: Insert Case details
+            DB-->>API: Document Saved
+            API-->>Frontend: 201 Created (Case ID)
+            Frontend-->>Client: Navigate to Case Timeline
+            
+            Client->>Frontend: Mark Milestone Complete
+            Frontend->>API: PUT /api/cases/:id/milestones/:m_id
+            API->>DB: Update Case Progress %
+            DB-->>API: Case Updated
+            API-->>Frontend: 200 OK (New Progress Map)
+            Frontend-->>Client: Display Progress Bar 
+            end
+
+            %% SECTION 4: AI CHATBOT & LEARNING QUIZZES
+            rect rgb(245, 245, 235)
+            note over Client, Gemini: 4. AI LEGAL ASSISTANT & SUMMARIZER
+            Client->>Frontend: Submit Legal Question/Prompt
+            Frontend->>API: POST /api/ai/chat (prompt, context)
+            API->>Gemini: Send prompt & legal system instructions
+            Gemini-->>API: Generate Legal Contextual Response
+            API-->>Frontend: 200 OK (AI Answer)
+            Frontend-->>Client: Render Chat Bubble
+            
+            Client->>Frontend: Request Learning Quiz
+            Frontend->>API: POST /api/ai/quiz
+            API->>Gemini: Generate 5 legal MCQs
+            Gemini-->>API: Return JSON array of questions
+            API-->>Frontend: 200 OK (Questions Data)
+            Frontend-->>Client: Display Quiz UI
+            end
+
+            %% SECTION 5: GAMIFICATION & XP MODEL
+            rect rgb(235, 235, 245)
+            note over Client, Gemini: 5. GAMIFICATION & REWARD PIPELINE
+            Client->>Frontend: Complete Quiz / Read Article
+            Frontend->>API: POST /api/activity/log (activityType)
+            API->>DB: calculateXP(type) & Update User Streaks
+            DB-->>API: Updated XP Document
+            API-->>Frontend: 200 OK (XP Earned)
+            Frontend-->>Client: Show Gamification Toast (+50 XP)
+            end
+
+            %% SECTION 6: ADMIN MODERATION & DASHBOARD
+            rect rgb(245, 235, 235)
+            note over Admin, Gemini: 6. ADMIN SYSTEM MANAGEMENT
+            Admin->>Frontend: Access System Statistics
+            Frontend->>API: GET /api/admin/dashboard (Admin Verify)
+            API->>Auth: Verify Admin Role claims
+            Auth-->>API: Allowed
+            API->>DB: aggregate() total Users, Cases, Documents
+            DB-->>API: Aggregated Metrics Data
+            API-->>Frontend: 200 OK (Stats Object)
+            Frontend-->>Admin: Render Charts & Tables
+            
+            Admin->>Frontend: Manage User Profile
+            Frontend->>API: DELETE /api/admin/users/:id
+            API->>DB: Hard Delete User
+            DB-->>API: Document Removed
+            API->>Auth: Revoke Firebase Credentials
+            Auth-->>API: Success
+            API-->>Frontend: 200 OK
+            Frontend-->>Admin: Show Success Toast
+            end
+        </pre>
+    </div>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            sequence: {
+                showSequenceNumbers: true,
+                messageAlign: 'center',
+                useMaxWidth: false
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -12,7 +12,7 @@ dotenv.config({ path: '../.env' }); // Looking for .env in root
 
 connectDB().then(() => {
     seedArticles();
-    seedLawyers();
+    // seedLawyers(); // Removed to preserve 17k records
     initCronJobs();
 });
 const app = express();

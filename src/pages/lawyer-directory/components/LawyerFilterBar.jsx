@@ -31,18 +31,6 @@ const LawyerFilterBar = ({ filters, onFilterChange, filterOptions }) => {
                 ))}
             </select>
 
-            {/* Language */}
-            <select
-                className="px-3 py-2.5 bg-background border border-border rounded-lg text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
-                value={filters.language}
-                onChange={(e) => onFilterChange('language', e.target.value)}
-            >
-                <option value="all">{t('lawyer.allLanguages')}</option>
-                {filterOptions.languages?.map(l => (
-                    <option key={l} value={l}>{l}</option>
-                ))}
-            </select>
-
             {/* Location */}
             <select
                 className="px-3 py-2.5 bg-background border border-border rounded-lg text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
@@ -56,12 +44,11 @@ const LawyerFilterBar = ({ filters, onFilterChange, filterOptions }) => {
             </select>
 
             {/* Clear */}
-            {(filters.search || filters.specialization !== 'all' || filters.language !== 'all' || filters.location !== 'all') && (
+            {(filters.search || filters.specialization !== 'all' || filters.location !== 'all') && (
                 <button
                     onClick={() => {
                         onFilterChange('search', '');
                         onFilterChange('specialization', 'all');
-                        onFilterChange('language', 'all');
                         onFilterChange('location', 'all');
                     }}
                     className="flex items-center gap-1.5 px-3 py-2.5 text-sm text-muted-foreground hover:text-foreground border border-border rounded-lg hover:bg-muted transition-colors"

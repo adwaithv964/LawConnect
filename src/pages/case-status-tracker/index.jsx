@@ -50,11 +50,11 @@ const CaseStatusTracker = () => {
     };
 
     return (
-        <div className="min-h-screen bg-background">
+        <div className="min-h-screen bg-background flex flex-col">
             <Header />
             <EmergencyAlertBanner />
 
-            <main className="pt-32 lg:pt-36 pb-12 px-4 lg:px-6 max-w-5xl mx-auto">
+            <main className="pt-32 lg:pt-36 pb-12 px-4 lg:px-6 w-full max-w-7xl mx-auto flex-grow flex flex-col">
                 {/* Header */}
                 <div className="mb-8">
                     <div className="flex items-center gap-3 mb-2">
@@ -65,15 +65,15 @@ const CaseStatusTracker = () => {
                             {t('caseStatus.title')}
                         </h1>
                     </div>
-                    <p className="text-sm md:text-base text-muted-foreground mt-1">
-                        {t('caseStatus.subtitle')}
+                    <p className="text-sm md:text-base text-muted-foreground mt-1 max-w-3xl">
+                        Mocking case tracking using Option 2 simulated integration.
                     </p>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
                     {/* Search Form */}
                     <div className="lg:col-span-3 space-y-5">
-                        <div className="bg-card border border-border rounded-xl p-6">
+                        <div className="bg-card border border-border rounded-xl p-6 shadow-sm">
                             <form onSubmit={handleSearch} className="space-y-4">
                                 <div>
                                     <label className="block text-sm font-medium text-foreground mb-1.5">
@@ -148,7 +148,7 @@ const CaseStatusTracker = () => {
 
                         {/* Result Card */}
                         {result && (
-                            <div className="bg-card border border-border rounded-xl overflow-hidden">
+                            <div className="bg-card border border-border rounded-xl overflow-hidden shadow-sm animate-in fade-in slide-in-from-bottom-2">
                                 {/* Status header */}
                                 <div className="bg-gradient-to-r from-primary/10 to-primary/5 border-b border-border px-6 py-4 flex items-center justify-between">
                                     <div>
@@ -189,14 +189,14 @@ const CaseStatusTracker = () => {
                                         href={result.portalLink}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="flex items-center justify-center gap-2 w-full px-4 py-2.5 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors"
+                                        className="flex items-center justify-center gap-2 w-full px-4 py-2.5 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors mt-4"
                                     >
                                         <Icon name="ExternalLink" size={16} />
                                         {t('caseStatus.visitPortal')}
                                     </a>
 
                                     {/* Disclaimer */}
-                                    <div className="flex items-start gap-2 p-3 bg-warning/10 border border-warning/20 rounded-lg">
+                                    <div className="flex items-start gap-2 p-3 bg-warning/10 border border-warning/20 rounded-lg mt-4">
                                         <Icon name="AlertTriangle" size={16} color="var(--color-warning)" className="flex-shrink-0 mt-0.5" />
                                         <div>
                                             <p className="text-xs font-semibold text-warning mb-0.5">{t('caseStatus.disclaimer')}</p>
@@ -209,8 +209,8 @@ const CaseStatusTracker = () => {
 
                         {/* Empty state */}
                         {!result && !isLoading && !error && (
-                            <div className="text-center py-16 text-muted-foreground">
-                                <Icon name="FileSearch" size={48} color="var(--color-muted-foreground)" className="mx-auto mb-3" />
+                            <div className="text-center py-16 text-muted-foreground border border-dashed border-border rounded-xl">
+                                <Icon name="FileSearch" size={48} color="var(--color-muted-foreground)" className="mx-auto mb-3 opacity-50" />
                                 <p className="text-sm">{t('caseStatus.enterDetails')}</p>
                             </div>
                         )}

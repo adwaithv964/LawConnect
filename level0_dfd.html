@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Level 0 DFD - LawConnect</title>
+    <!-- Include Mermaid.js for drawing diagrams directly in browser -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: white;
+            margin: 0;
+            padding: 40px;
+        }
+
+        .header {
+            align-self: flex-start;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            margin-left: 20px;
+        }
+
+        .diagram-container {
+            width: 100%;
+            max-width: 1400px;
+            display: flex;
+            justify-content: center;
+            background-color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">LEVEL 0</div>
+
+    <div class="diagram-container">
+        <!-- The Mermaid code goes inside this div -->
+        <pre class="mermaid">
+        flowchart LR
+            classDef default font-family:'Times New Roman',font-size:16px,font-weight:bold,color:#000
+        
+            %% External Entities (Actors)
+            Admin["Admin"]
+            Lawyer["Lawyer"]
+            Client["Client"]
+        
+            %% Core Process Hub
+            System(["LawConnect System"])
+        
+            %% Data Store
+            DB[("DB")]
+        
+            %% Exact Visual Replication Styling
+            style Admin fill:#fff,stroke:#000,stroke-width:2px,rx:8px,ry:8px,padding:20px
+            style Lawyer fill:#fff,stroke:#000,stroke-width:2px,rx:8px,ry:8px,padding:20px
+            style Client fill:#fff,stroke:#000,stroke-width:2px,rx:8px,ry:8px,padding:20px
+            style System fill:#fff,stroke:#000,stroke-width:2px,padding:30px
+            style DB fill:#fff,stroke:#000,stroke-width:2px
+        
+            %% --- Data Flow Relationships ---
+            %% Admin Interactions
+            Admin -->|"Manage System Users\n & Settings"| System
+            System -->|"Audit Logs &\n Analytics"| Admin
+        
+            %% Lawyer Interactions
+            Lawyer -->|"Upload Evidence & Cases,\n AI Prompts & Action Plans"| System
+            System -->|"Encrypted Vault Access,\n AI Summaries & Reminders"| Lawyer
+        
+            %% Client Interactions
+            Client -->|"Upload Documents &\n Book Appointments"| System
+            System -->|"Case Progress &\n Verified Evidence Status"| Client
+        
+            %% Database Interactions
+            System -->|"Store Encrypted Data,\n Profiles, Cases & Logs"| DB
+            DB -->|"Retrieve Documents &\n User Authentication Data"| System
+        </pre>
+    </div>
+
+    <!-- Initialize Mermaid to process the "mermaid" class tags -->
+    <script>
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+    </script>
+</body>
+
+</html>

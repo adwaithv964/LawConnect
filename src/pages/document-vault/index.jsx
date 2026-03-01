@@ -122,7 +122,7 @@ const DocumentVault = () => {
         <CaseStatusIndicator />
         <OfflineStatusIndicator />
 
-        <main className="mx-4 lg:mx-6 py-6 lg:py-8">
+        <main className="mx-4 lg:mx-6 py-6 lg:py-8 mt-12 lg:mt-8">
           <div className="mb-6 lg:mb-8">
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
               <div>
@@ -133,13 +133,15 @@ const DocumentVault = () => {
                   Securely store and manage all your legal documents
                 </p>
               </div>
-              <Button
-                iconName="Upload"
-                onClick={() => setShowUploadModal(true)}
-                size="lg">
+              <div className="flex items-center gap-4 lg:mr-[220px]"> {/* Increased right margin to fully clear the CaseStatusIndicator */}
+                <Button
+                  iconName="Upload"
+                  onClick={() => setShowUploadModal(true)}
+                  size="lg">
 
-                Upload Document
-              </Button>
+                  Upload Document
+                </Button>
+              </div>
             </div>
           </div>
 

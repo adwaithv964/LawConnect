@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LawConnect Data Flow Diagram - Level 0</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #ffffff;
+            color: #333333;
+            margin: 0;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 30px;
+            text-align: center;
+            border-bottom: 2px solid #eaeaea;
+            padding-bottom: 10px;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .diagram-wrapper {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            justify-content: center;
+            background-color: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Customize mermaid edges text */
+        .edgeLabel {
+            background-color: #ffffff !important;
+            font-size: 13px !important;
+            padding: 4px 8px !important;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>LawConnect - Level 0 Data Flow Diagram</h1>
+
+    <div class="diagram-wrapper">
+        <pre class="mermaid">
+        flowchart LR
+            %% Styling to match the simple, clean look of the provided example
+            classDef entity fill:#ffffff,stroke:#000000,stroke-width:1.5px,rx:0,ry:0,font-size:16px,color:#000000
+            classDef process fill:#ffffff,stroke:#000000,stroke-width:1.5px,font-size:16px,color:#000000
+            classDef dataStore fill:#ffffff,stroke:#000000,stroke-width:1.5px,font-size:16px,color:#000000
+            
+            %% External Entities (Rectangles)
+            Admin["Admin"]:::entity
+            User["User<br/>(Client / Lawyer)"]:::entity
+            
+            %% Central Process (Ellipse/Circle)
+            System(["LawConnect System"]):::process
+            
+            %% Data Store (Cylinder)
+            DB[("DB")]:::dataStore
+            
+            %% Relocating nodes for a layout similar to User Profile left, Admin left, DB right
+            %% Mermaid calculates optimal layout, but we can structure the flow.
+            
+            %% Links Admin <--> System
+            Admin -->|"Manage Users & Roles (userRoutes)<br/>Moderate Articles (articleRoutes)<br/>View Analytics (dashboardRoutes)"| System
+            System -->|"Dashboard Metrics<br/>System Logs"| Admin
+            
+            %% Links User <--> System
+            User -->|"Auth/Profiles (userRoutes)<br/>Case Details & Status (caseRoutes, caseTrackerRoutes)<br/>Encrypted Vault & Evidence (documentRoutes, evidenceRoutes)<br/>AI Prompts [Chat/Quiz/Summarizer] (aiRoutes)<br/>Gamification XP/Streaks (activityRoutes)"| System
+            
+            System -->|"Case Progress Updates<br/>AI Generated Legal Roadmaps & Summaries<br/>Decrypted Evidence & Documents<br/>Legal Articles (articleRoutes) & News (newsRoutes)<br/>Lawyer Search Matches (lawyerRoutes)"| User
+            
+            %% Links System <--> DB
+            System -->|"Store User Profiles, Encrypted Evidence,<br/>Documents Metadata, Cases,<br/>Articles, XP Gamification Logs"| DB
+            DB -->|"Retrieve Authenticated Users,<br/>Verified Evidence, Case Histories,<br/>Articles Content, App Analytics"| System
+            
+        </pre>
+    </div>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                curve: 'basis', // smoother curves
+                nodeSpacing: 100,
+                rankSpacing: 250
+            }
+        });
+    </script>
+
+</body>
+
+</html>

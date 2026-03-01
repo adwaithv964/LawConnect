@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LawConnect ER Diagram (Chen's Notation)</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #ffffff;
+            color: #333333;
+            margin: 0;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            text-align: center;
+            border-bottom: 2px solid #eaeaea;
+            padding-bottom: 10px;
+            width: 100%;
+            max-width: 1800px;
+        }
+
+        .diagram-wrapper {
+            width: 100%;
+            max-width: 1800px;
+            display: flex;
+            justify-content: center;
+            background-color: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            overflow-x: auto;
+        }
+
+        .mermaid {
+            display: flex;
+            justify-content: center;
+            min-width: 1000px;
+            /* Ensure wide rendering */
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>LawConnect - Entity Relationship Diagram</h1>
+
+    <div class="diagram-wrapper">
+        <pre class="mermaid">
+        flowchart TB
+            %% Styling to exactly match Chen's Notation provided in the example
+            classDef entity fill:#ffffff,stroke:#000000,stroke-width:1.5px,rx:0,ry:0,font-weight:bold,color:#000000
+            classDef attribute fill:#ffffff,stroke:#000000,stroke-width:1px,rx:20px,ry:20px,color:#000000
+            classDef keyAttribute fill:#ffffff,stroke:#000000,stroke-width:1.5px,rx:20px,ry:20px,text-decoration:underline,color:#000000
+            classDef relationship fill:#ffffff,stroke:#000000,stroke-width:1px,color:#000000
+            
+            %% Main Entities
+            U[User]:::entity
+            C[Case]:::entity
+            D[Document]:::entity
+            E[Evidence]:::entity
+            L[Lawyer]:::entity
+            A[ActivityLog]:::entity
+            AR[Article]:::entity
+            I[Interaction]:::entity
+
+            %% Relationships (Rhombus)
+            R1{Manages}:::relationship
+            R2{Uploads}:::relationship
+            R3{Secures}:::relationship
+            R4{Generates}:::relationship
+            R5{Searches}:::relationship
+            R6{Reads}:::relationship
+            R7{RelatesTo}:::relationship
+
+            %% Link Entities to Relationships
+            U --- R1 --- C
+            U --- R2 --- D
+            U --- R3 --- E
+            U --- R4 --- A
+            U --- R5 --- L
+            U --- R6 --- I
+            I --- R7 --- AR
+
+            %% USER Attributes
+            u_id([_id]):::keyAttribute
+            u_uid([firebaseUid]):::attribute
+            u_email([email]):::attribute
+            u_name([displayName]):::attribute
+            u_date([createdAt]):::attribute
+            U --- u_id & u_uid & u_email & u_name & u_date
+
+            %% CASE Attributes
+            c_id([_id]):::keyAttribute
+            c_title([title]):::attribute
+            c_status([status]):::attribute
+            c_cat([category]):::attribute
+            c_prog([completion%]):::attribute
+            c_sd([startDate]):::attribute
+            C --- c_id & c_title & c_status & c_cat & c_prog & c_sd
+
+            %% DOCUMENT Attributes
+            d_id([_id]):::keyAttribute
+            d_name([name]):::attribute
+            d_type([fileType]):::attribute
+            d_size([size]):::attribute
+            d_pwd([isPwdProtected]):::attribute
+            d_date([uploadDate]):::attribute
+            D --- d_id & d_name & d_type & d_size & d_pwd & d_date
+
+            %% EVIDENCE Attributes
+            e_id([_id]):::keyAttribute
+            e_name([name]):::attribute
+            e_media([mediaType]):::attribute
+            e_enc([encryptedData]):::attribute
+            e_hash([sha256Hash]):::attribute
+            e_iv([iv]):::attribute
+            E --- e_id & e_name & e_media & e_enc & e_hash & e_iv
+
+            %% LAWYER Attributes
+            l_id([_id]):::keyAttribute
+            l_name([Name]):::attribute
+            l_exp([Experience]):::attribute
+            l_prac([Practice Areas]):::attribute
+            l_loc([Location]):::attribute
+            L --- l_id & l_name & l_exp & l_prac & l_loc
+
+            %% ACTIVITY LOG Attributes
+            al_id([_id]):::keyAttribute
+            al_type([type]):::attribute
+            al_title([title]):::attribute
+            al_link([link]):::attribute
+            A --- al_id & al_type & al_title & al_link
+
+            %% ARTICLE Attributes
+            ar_id([_id]):::keyAttribute
+            ar_title([title]):::attribute
+            ar_cat([category]):::attribute
+            ar_diff([difficulty]):::attribute
+            ar_views([views]):::attribute
+            ار_pub([publishDate]):::attribute
+            AR --- ar_id & ar_title & ar_cat & ar_diff & ar_views & ار_pub
+
+            %% INTERACTION Attributes
+            i_id([_id]):::keyAttribute
+            i_bm([isBookmarked]):::attribute
+            i_vw([viewedAt]):::attribute
+            i_lk([likedAt]):::attribute
+            I --- i_id & i_bm & i_vw & i_lk
+        </pre>
+    </div>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                curve: 'linear',  // Straight lines typical for ER diagrams
+                nodeSpacing: 40,
+                rankSpacing: 80
+            }
+        });
+    </script>
+
+</body>
+
+</html>

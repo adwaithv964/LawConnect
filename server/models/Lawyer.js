@@ -1,24 +1,17 @@
 const mongoose = require('mongoose');
 
+// Switch to the 'lawconnect' database specifically for lawyers since the other models use 'test'
+const lawyerDb = mongoose.connection.useDb('lawconnect');
+
 const lawyerSchema = new mongoose.Schema({
-    name: { type: String, required: true },
-    specializations: [{ type: String }],
-    experience: { type: Number, default: 0 }, // years
-    languages: [{ type: String }],
-    location: {
-        city: { type: String, default: '' },
-        state: { type: String, default: '' }
-    },
-    barCouncilId: { type: String, default: '' },
-    verified: { type: Boolean, default: true },
-    bio: { type: String, default: '' },
-    contactEmail: { type: String, default: '' },
-    phone: { type: String, default: '' },
-    rating: { type: Number, default: 0, min: 0, max: 5 },
-    casesSolved: { type: Number, default: 0 }
-}, { timestamps: true });
+    Name: { type: String, required: true },
+    Experience: { type: String, default: '' },
+    "Practice Areas": { type: String, default: '' },
+    Location: { type: String, default: '' },
+    "Profile URL": { type: String, default: '' }
+}, { timestamps: true, strict: false });
 
 // Text index for search
-lawyerSchema.index({ name: 'text', specializations: 'text', 'location.city': 'text', bio: 'text' });
+lawyerSchema.index({ Name: 'text', "Practice Areas": 'text', Location: 'text' });
 
-module.exports = mongoose.model('Lawyer', lawyerSchema);
+module.exports = lawyerDb.model('lawyers', lawyerSchema, 'lawyers');

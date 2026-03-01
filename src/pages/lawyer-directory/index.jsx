@@ -20,7 +20,6 @@ const LawyerDirectory = () => {
     const [filters, setFilters] = useState({
         search: '',
         specialization: 'all',
-        language: 'all',
         location: 'all'
     });
 
@@ -128,7 +127,7 @@ const LawyerDirectory = () => {
                                 <Icon name="Users" size={56} color="var(--color-muted-foreground)" />
                                 <h3 className="text-lg font-semibold text-foreground mt-4 mb-2">{t('lawyer.noResults')}</h3>
                                 <button
-                                    onClick={() => setFilters({ search: '', specialization: 'all', language: 'all', location: 'all' })}
+                                    onClick={() => setFilters({ search: '', specialization: 'all', location: 'all' })}
                                     className="text-primary underline text-sm"
                                 >
                                     {t('lawyer.clearFilters')}
