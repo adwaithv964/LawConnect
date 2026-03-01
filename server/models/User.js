@@ -14,6 +14,11 @@ const userSchema = mongoose.Schema({
     displayName: {
         type: String
     },
+    status: {
+        type: String,
+        enum: ['active', 'suspended', 'banned'],
+        default: 'active'
+    },
     createdAt: {
         type: Date,
         default: Date.now
@@ -23,3 +28,4 @@ const userSchema = mongoose.Schema({
 });
 
 module.exports = mongoose.model('User', userSchema);
+

@@ -14,11 +14,48 @@ import SafetyFeaturePanel from './components/SafetyFeaturePanel';
 import ResourceDownloadCard from './components/ResourceDownloadCard';
 import ReportingGuideCard from './components/ReportingGuideCard';
 
+const API = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
+
+// Maps admin hotline category to a Lucide icon name
+const CATEGORY_ICON_MAP = {
+  emergency: 'AlertCircle',
+  police: 'Shield',
+  women: 'Heart',
+  child: 'Baby',
+  legal: 'Scale',
+  domestic: 'Home',
+  cyber: 'Monitor',
+  ngo: 'Users'
+};
+
 const VictimSupportFlow = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [locationFilter, setLocationFilter] = useState('nearest');
   const [showAssessment, setShowAssessment] = useState(false);
   const [assessmentCategory, setAssessmentCategory] = useState(null);
+  const [adminHotlines, setAdminHotlines] = useState([]);
+
+  // Fetch admin-managed hotlines on mount
+  useEffect(() => {
+    fetch(`${API}/admin/hotlines`)
+      .then(r => r.json())
+      .then(data => {
+        const mapped = (data.hotlines || []).map((h, i) => ({
+          id: `admin-${i}`,
+          title: h.name,
+          description: `${h.category ? h.category.charAt(0).toUpperCase() + h.category.slice(1) : ''} helpline`,
+          phoneNumber: h.number,
+          availability: '24/7 Available',
+          icon: CATEGORY_ICON_MAP[h.category] || 'Phone',
+          variant: h.category === 'emergency' || h.category === 'police' ? 'critical' : 'default',
+          portalLink: null,
+          portalName: null,
+          _adminCategory: h.category
+        }));
+        setAdminHotlines(mapped);
+      })
+      .catch(() => { }); // Fail silently — static list still shows
+  }, []);
 
   useEffect(() => {
     const handleEscape = (e) => {
@@ -268,17 +305,27 @@ const VictimSupportFlow = () => {
     { value: 'chennai', label: 'Chennai' }];
 
 
+  // Merge static + admin hotlines, deduplicating by phone number
+  const existingNumbers = new Set(emergencyContacts.map(c => c.phoneNumber));
+  const uniqueAdminHotlines = adminHotlines.filter(h => !existingNumbers.has(h.phoneNumber));
+  const allContacts = [...emergencyContacts, ...uniqueAdminHotlines];
+
   const filteredContacts = selectedCategory === 'all' ?
-    emergencyContacts :
-    emergencyContacts?.filter((contact) => {
-      const categoryMap = {
-        cyber: [1],
-        domestic: [2],
-        harassment: [2, 3],
-        child: [5],
-        senior: [6]
-      };
-      return categoryMap?.[selectedCategory]?.includes(contact?.id);
+    allContacts :
+    allContacts.filter((contact) => {
+      // Static contacts — filter by category map
+      if (typeof contact.id === 'number') {
+        const categoryMap = {
+          cyber: [1],
+          domestic: [2],
+          harassment: [2, 3],
+          child: [5],
+          senior: [6]
+        };
+        return categoryMap?.[selectedCategory]?.includes(contact.id);
+      }
+      // Admin hotlines — match by category string
+      return contact._adminCategory === selectedCategory;
     });
 
   return (

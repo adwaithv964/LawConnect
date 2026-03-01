@@ -22,13 +22,19 @@ import LawyerDirectory from './pages/lawyer-directory';
 import CaseStatusTracker from './pages/case-status-tracker';
 import LegalCalendar from './pages/legal-calendar';
 
+// Admin Panel
+import { AdminAuthProvider } from './pages/admin/AdminAuthContext';
+import AdminLogin from './pages/admin/AdminLogin';
+import AdminLayout from './pages/admin/AdminLayout';
+import AdminRoute from './pages/admin/AdminRoute';
+import AiFeatureGate from './components/AiFeatureGate';
+
 const Routes = () => {
   return (
     <BrowserRouter>
       <ErrorBoundary>
         <ScrollToTop />
         <RouterRoutes>
-          {/* Define your route here */}
           {/* Public Routes */}
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
@@ -43,13 +49,32 @@ const Routes = () => {
           <Route path="/legal-news" element={<PrivateRoute><LegalNews /></PrivateRoute>} />
           <Route path="/current-affairs" element={<PrivateRoute><CurrentAffairs /></PrivateRoute>} />
           <Route path="/evidence-locker" element={<PrivateRoute><EvidenceLocker /></PrivateRoute>} />
-          <Route path="/legal-steps-generator" element={<PrivateRoute><LegalStepsGenerator /></PrivateRoute>} />
+
+          {/* AI-powered routes — gated by aiEnabled flag in App Settings */}
+          <Route path="/legal-steps-generator" element={
+            <PrivateRoute>
+              <AiFeatureGate>
+                <LegalStepsGenerator />
+              </AiFeatureGate>
+            </PrivateRoute>
+          } />
+
           <Route path="/document-templates" element={<PrivateRoute><DocumentTemplates /></PrivateRoute>} />
           <Route path="/document-vault" element={<PrivateRoute><DocumentVault /></PrivateRoute>} />
           <Route path="/settings" element={<PrivateRoute><SettingsPage /></PrivateRoute>} />
           <Route path="/lawyer-directory" element={<PrivateRoute><LawyerDirectory /></PrivateRoute>} />
           <Route path="/case-status-tracker" element={<PrivateRoute><CaseStatusTracker /></PrivateRoute>} />
           <Route path="/legal-calendar" element={<PrivateRoute><LegalCalendar /></PrivateRoute>} />
+
+          {/* Admin Panel — Separate JWT auth, not Firebase */}
+          <Route path="/admin/login" element={<AdminAuthProvider><AdminLogin /></AdminAuthProvider>} />
+          <Route path="/admin/*" element={
+            <AdminAuthProvider>
+              <AdminRoute>
+                <AdminLayout />
+              </AdminRoute>
+            </AdminAuthProvider>
+          } />
 
           <Route path="*" element={<NotFound />} />
         </RouterRoutes>
@@ -59,3 +84,4 @@ const Routes = () => {
 };
 
 export default Routes;
+
